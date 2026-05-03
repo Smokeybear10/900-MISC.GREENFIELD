@@ -63,29 +63,6 @@ When scaffolding, Claude inspects the directory first. If a scaffold already exi
 
 Idea validation and planning stress-test prompts (role-prompt format) live in [`PROMPTS.md`](./PROMPTS.md).
 
-## Git
-
-Connect existing folder to existing GitHub repo:
-
-```bash
-cd ~/Github/<folder>
-git init
-git add .
-git commit -m "init"
-git remote add origin <url>          # or set-url if remote exists
-git push -u origin main
-```
-
-URL: github.com → Code button.
-
-Routine:
-
-```bash
-git add .
-git commit -m "msg"
-git push
-```
-
 ## Decision defaults
 
 | Skill | Default |

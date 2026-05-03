@@ -18,7 +18,9 @@ export default function RootLayout({
           <Link href="/" className="logo">/GREEN</Link>
           <Link href="/greenfield">greenfield</Link>
           <Link href="/prompt-engineer">prompt-engineer</Link>
+          <Link href="/menu">menu</Link>
           <Link href="/prompts">prompts</Link>
+          <Link href="/rules">rules</Link>
           <Link href="/git">git</Link>
         </nav>
         {children}

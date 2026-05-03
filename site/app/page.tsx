@@ -26,7 +26,7 @@ export default function Home() {
           </div>
           <h2>greenfield</h2>
           <p>
-            9-step bootstrap. Idea → diagnostic → plan → reconciled →
+            7-step bootstrap. Idea → diagnostic → plan → reconciled →
             scaffolded. Built around the step you&apos;ll most want to skip.
           </p>
         </Link>
@@ -39,6 +39,17 @@ export default function Home() {
           <p>
             Reads your repo before it writes the prompt. No invented file
             paths, no broad refactors, real constraints baked in.
+          </p>
+        </Link>
+        <Link className="card" href="/menu">
+          <div className="card-head">
+            <span className="num">03</span>
+            <span className="arrow" aria-hidden>→</span>
+          </div>
+          <h2>menu</h2>
+          <p>
+            Curated index of the 16 gstack skills actually worth reaching
+            for, organized by when to use them.
           </p>
         </Link>
       </div>

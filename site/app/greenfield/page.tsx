@@ -15,7 +15,7 @@ export default function Greenfield() {
 
       <h2>What it does</h2>
       <p>
-        Walks through 9 steps that take a project from "vague idea" to
+        Walks through 7 steps that take a project from "vague idea" to
         "shippable v1 spec + clean repo, ready to build." Combines four
         gstack skills (<code>/office-hours</code>,{' '}
         <code>/plan-ceo-review</code>, <code>/plan-eng-review</code>,{' '}
@@ -66,7 +66,7 @@ cd ~/Github/<tentative-name>
         compound, so do them in order.
       </p>
 
-      <h2>The 9 steps</h2>
+      <h2>The 7 steps</h2>
 
       <h3>Step 0 (optional): max effort</h3>
       <pre>
@@ -188,33 +188,7 @@ Surface anything in /office-hours that's missing from DESIGN.md.`}</code>
         <code>Fold all [N] items into DESIGN.md</code>
       </pre>
 
-      <h3>Step 7: capture prompts</h3>
-      <pre>
-        <code>make PLAYBOOK.md and PROMPTS.md capturing this session</code>
-      </pre>
-      <p>
-        Becomes the reusable framework for the next project. Append lessons
-        learned to <code>~/Github/Settings/PLAYBOOK.md</code> too if anything
-        crosses projects.
-      </p>
-
-      <h3>Step 8: pre-build kill gates</h3>
-      <p>
-        Before writing code, validate demand. The minimum gate: text 3
-        friends in your target user segment and confirm they want it.
-      </p>
-      <p>Prompts to communicate scope decisions:</p>
-      <pre>
-        <code>{`Name tentatively is <name>. friends already in.
-no need to make the app rn i just want to do localhost
-i want this to be localhost <port> default`}</code>
-      </pre>
-      <p>
-        Locking the port at scaffold time avoids OAuth callback drift later
-        (config it once, not three times).
-      </p>
-
-      <h3>Step 9: cleanup before scaffolding</h3>
+      <h3>Step 7: cleanup before scaffolding</h3>
       <pre>
         <code>get started with scaffolding</code>
       </pre>
@@ -280,24 +254,6 @@ i want this to be localhost <port> default`}</code>
               <code>{`<repo>/DESIGN.md`}</code>
             </td>
             <td>Implementable v1 spec</td>
-          </tr>
-          <tr>
-            <td>
-              <code>{`<repo>/TODOS.md`}</code>
-            </td>
-            <td>Pre-build blockers + v2-v5 roadmap</td>
-          </tr>
-          <tr>
-            <td>
-              <code>{`<repo>/PLAYBOOK.md`}</code>
-            </td>
-            <td>Lessons + anti-patterns from this session</td>
-          </tr>
-          <tr>
-            <td>
-              <code>{`<repo>/PROMPTS.md`}</code>
-            </td>
-            <td>Verbatim prompts for replay</td>
           </tr>
           <tr>
             <td>

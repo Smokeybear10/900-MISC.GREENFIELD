@@ -23,9 +23,7 @@ Type `/greenfield` in a new project.
 4. `/plan-eng-review`
 5. `/plan-design-review`
 6. Reconcile `DESIGN.md` against the office-hours doc
-7. Write `PLAYBOOK.md` and `PROMPTS.md` for the new project
-8. Kill gates: name, demand validation
-9. Cleanup: inspect dir, rename folder, lock dev port
+7. Cleanup: inspect dir, rename folder, lock dev port
 
 ## Prompts
 

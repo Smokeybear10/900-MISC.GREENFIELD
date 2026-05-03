@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{PRODUCT}} — System Architecture</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #0b0d10;
+    --surface: #14171c;
+    --surface-2: #1a1e25;
+    --border: #262b33;
+    --border-strong: #343a44;
+    --text: #e6e9ef;
+    --text-dim: #8b95a5;
+    --accent: #7dd3fc;
+    --warn: #fbbf24;
+    --good: #86efac;
+    --mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace;
+    --sans: -apple-system, "SF Pro Text", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.55 var(--sans);
+    padding: 48px 24px 96px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  header { margin-bottom: 56px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  h1 { font-size: 28px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 18px; font-weight: 600; margin: 0 0 16px; letter-spacing: -0.005em; display: flex; align-items: baseline; }
+  h3 { font-size: 14px; font-weight: 600; margin: 0 0 12px; color: var(--text); }
+  .sub { color: var(--text-dim); font-size: 13px; max-width: 720px; }
+  .meta { display: flex; gap: 18px; margin-top: 14px; font-family: var(--mono); font-size: 11.5px; color: var(--text-dim); }
+  .meta .pill { padding: 3px 8px; border: 1px solid var(--border); border-radius: 4px; }
+  section { margin-bottom: 56px; }
+  .section-num { color: var(--text-dim); font-family: var(--mono); margin-right: 10px; font-size: 13px; font-weight: 500; }
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    overflow: auto;
+  }
+  .panel.flush { padding: 0; }
+  .mermaid { background: transparent; }
+
+  /* full-bleed hero band — breaks out of .container max-width */
+  .hero-section {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 80px 0 96px;
+    margin-top: -8px;
+    margin-bottom: 72px;
+    background:
+      radial-gradient(1200px 400px at 50% 0%, rgba(125,211,252,0.06) 0%, transparent 70%),
+      linear-gradient(180deg, #14171c 0%, #0d1015 100%);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-section > .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .hero-section h2 { font-size: 24px; margin-bottom: 18px; }
+  .hero-section .sub { font-size: 14px; max-width: 820px; margin: 0 0 32px !important; }
+  .hero-section .panel.hero {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-section .panel.hero .mermaid {
+    width: 100%;
+    max-width: 1040px;
+  }
+  .hero-section .panel.hero .mermaid svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  @media (max-width: 720px) {
+    .hero-section { padding: 56px 0 64px; margin-bottom: 48px; }
+    .hero-section > .hero-inner { padding: 0 16px; }
+    .hero-section .panel.hero { min-height: 380px; }
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    transition: border-color .12s ease;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card .name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .card .purpose { color: var(--text-dim); font-size: 13px; margin-bottom: 10px; line-height: 1.45; }
+  .card .meta-row { display: flex; gap: 10px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; }
+  .card .path { color: var(--accent); }
+  .card .deps { color: var(--text-dim); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font-weight: 600; padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text-dim); font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td.mono, code { font-family: var(--mono); font-size: 12.5px; color: var(--accent); background: transparent; padding: 0; }
+  .lifecycle { margin-bottom: 28px; }
+  .lifecycle h3 .budget { font-family: var(--mono); font-size: 12px; color: var(--warn); margin-left: 10px; font-weight: 400; }
+  .decision { display: grid; grid-template-columns: 240px 1fr; gap: 18px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .decision:first-child { padding-top: 0; }
+  .decision:last-child { border-bottom: none; padding-bottom: 0; }
+  .decision .d-name { font-weight: 600; }
+  .decision .d-why { color: var(--text-dim); }
+  .decision .d-meta { display: block; margin-top: 4px; font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+  .oos { display: grid; grid-template-columns: 240px 1fr; gap: 18px; padding: 10px 0; }
+  .oos .oos-name { font-weight: 600; }
+  .oos .oos-why { color: var(--text-dim); }
+  @media (max-width: 720px) {
+    body { padding: 32px 16px 64px; }
+    .decision, .oos { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>{{PRODUCT}} — System Architecture</h1>
+  <div class="sub">Companion to <code>DESIGN.md</code>. Where DESIGN.md says <em>what</em> to build, this says <em>how it's wired</em>.</div>
+  <div class="meta">
+    <span class="pill">v{{VERSION}}</span>
+    <span class="pill">updated {{DATE}}</span>
+    <span class="pill">source · ARCHITECTURE.md</span>
+  </div>
+</header>
+
+<section class="hero-section">
+  <div class="hero-inner">
+    <h2><span class="section-num">01</span>System overview</h2>
+    <p class="sub">{{ONE_PARAGRAPH_SYSTEM_PITCH}}</p>
+    <div class="panel hero">
+      <pre class="mermaid">
+%%{init: {'theme':'dark','themeVariables':{'fontSize':'18px'},'flowchart':{'nodeSpacing':70,'rankSpacing':90,'padding':24}}}%%
+graph TD
+  Browser[Browser]
+  Browser --> Edge[Vercel Edge]
+  Browser -.-> LS[(localStorage)]
+  Edge --> API[/api routes/]
+  API --> DB[(Postgres + RLS)]
+  API --> Auth[Auth]
+      </pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="section-num">02</span>Components</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="name">{{COMPONENT_NAME}}</div>
+      <div class="purpose">{{COMPONENT_PURPOSE}}</div>
+      <div class="meta-row">
+        <span class="path">{{COMPONENT_PATH}}</span>
+        <span class="deps">→ {{DEPS}}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="section-num">03</span>Request lifecycles</h2>
+  <div class="lifecycle">
+    <h3>{{LIFECYCLE_NAME}} <span class="budget">budget · {{MS}}ms</span></h3>
+    <div class="panel">
+      <pre class="mermaid">
+sequenceDiagram
+  participant U as User
+  participant B as Browser
+  participant E as Edge
+  participant DB as Postgres
+  U->>B: keystroke
+  B->>B: ref-imperative DOM update
+  Note over B: paint &lt; 16ms (no React reconcile)
+      </pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="section-num">04</span>State topology</h2>
+  <div class="panel flush">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Logical (DESIGN)</th>
+          <th>Physical</th>
+          <th>TTL</th>
+          <th>Failure mode</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{STATE_NAME}}</td>
+          <td>{{LOGICAL}}</td>
+          <td class="mono">{{PHYSICAL}}</td>
+          <td>{{TTL}}</td>
+          <td>{{FAILURE}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2><span class="section-num">05</span>Deployment topology</h2>
+  <div class="panel">
+    <pre class="mermaid">
+graph LR
+  subgraph Browser
+    UI[UI bundle]
+    LS[localStorage]
+  end
+  subgraph Edge["Vercel Edge"]
+    Routes[/api/*]
+  end
+  subgraph Supabase
+    PG[(Postgres + RLS)]
+    AuthSvc[Auth]
+  end
+  UI --> Routes
+  Routes --> PG
+  UI --> AuthSvc
+    </pre>
+  </div>
+  <p class="sub" style="margin: 16px 0 0;"><strong>Trust boundaries:</strong> {{TRUST_BOUNDARIES}}</p>
+</section>
+
+<section>
+  <h2><span class="section-num">06</span>Decision log</h2>
+  <div class="panel">
+    <div class="decision">
+      <div class="d-name">{{DECISION}}</div>
+      <div>
+        <div class="d-why">{{WHY}}</div>
+        <span class="d-meta">alternatives · {{ALTS}} &nbsp;·&nbsp; {{DATE}}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="section-num">07</span>Out of scope</h2>
+  <div class="panel">
+    <div class="oos">
+      <div class="oos-name">{{NOT_THIS}}</div>
+      <div class="oos-why">{{WHY_NOT}}</div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      darkMode: true,
+      background: '#14171c',
+      primaryColor: '#1a1e25',
+      primaryTextColor: '#e6e9ef',
+      primaryBorderColor: '#343a44',
+      lineColor: '#8b95a5',
+      secondaryColor: '#1a1e25',
+      tertiaryColor: '#0b0d10',
+      fontFamily: 'ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace',
+    },
+    flowchart: { curve: 'basis', padding: 20, useMaxWidth: true },
+    sequence: { actorMargin: 60, useMaxWidth: true }
+  });
+</script>
+
+</body>
+</html>

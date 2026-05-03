@@ -2,6 +2,7 @@
 # Install the GREEN framework into ~/.claude/
 # Idempotent: safe to run multiple times.
 # Symlinks every .md in .claude/commands/ into ~/.claude/commands/.
+# Symlinks every subdirectory of skills/ into ~/.claude/skills/.
 # Syncs RULES.md content into ~/.claude/CLAUDE.md (between markers).
 # Appends the /GREEN snippet to ~/.claude/CLAUDE.md (between markers).
 set -e
@@ -9,10 +10,12 @@ set -e
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 CLAUDE_DIR="$HOME/.claude"
 COMMANDS_DIR="$CLAUDE_DIR/commands"
+SKILLS_DIR="$CLAUDE_DIR/skills"
 GLOBAL_CLAUDE="$CLAUDE_DIR/CLAUDE.md"
 SNIPPET="$REPO_DIR/.claude/CLAUDE.md.snippet"
 RULES_SRC="$REPO_DIR/RULES.md"
 COMMANDS_SRC_DIR="$REPO_DIR/.claude/commands"
+SKILLS_SRC_DIR="$REPO_DIR/skills"
 GREEN_BEGIN="<!-- greenfield-framework:begin -->"
 GREEN_END="<!-- greenfield-framework:end -->"
 RULES_BEGIN="<!-- rules:begin -->"
@@ -21,7 +24,7 @@ RULES_END="<!-- rules:end -->"
 echo "Installing GREEN framework from: $REPO_DIR"
 echo ""
 
-mkdir -p "$COMMANDS_DIR"
+mkdir -p "$COMMANDS_DIR" "$SKILLS_DIR"
 
 # 1. Symlink every command in .claude/commands/ into ~/.claude/commands/
 shopt -s nullglob
@@ -43,9 +46,28 @@ for src in "$COMMANDS_SRC_DIR"/*.md; do
   fi
 done
 
+# 2. Symlink every skill subdirectory in skills/ into ~/.claude/skills/
+for src in "$SKILLS_SRC_DIR"/*/; do
+  src="${src%/}"
+  skillname=$(basename "$src")
+  dst="$SKILLS_DIR/$skillname"
+
+  if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
+    echo "  skill/$skillname: already symlinked"
+  else
+    if [ -e "$dst" ]; then
+      backup="$dst.bak.$(date +%s)"
+      mv "$dst" "$backup"
+      echo "  skill/$skillname: existing path backed up to $backup"
+    fi
+    ln -sf "$src" "$dst"
+    echo "  skill/$skillname: symlinked → $src"
+  fi
+done
+
 touch "$GLOBAL_CLAUDE"
 
-# 2. Sync RULES.md content into ~/.claude/CLAUDE.md (between rules markers)
+# 3. Sync RULES.md content into ~/.claude/CLAUDE.md (between rules markers)
 if [ -f "$RULES_SRC" ]; then
   if grep -qF "$RULES_BEGIN" "$GLOBAL_CLAUDE"; then
     awk -v rfile="$RULES_SRC" -v begin="$RULES_BEGIN" -v end="$RULES_END" '
@@ -72,7 +94,7 @@ if [ -f "$RULES_SRC" ]; then
   fi
 fi
 
-# 3. Sync /GREEN snippet into ~/.claude/CLAUDE.md (between greenfield-framework markers)
+# 4. Sync /GREEN snippet into ~/.claude/CLAUDE.md (between greenfield-framework markers)
 if [ -f "$SNIPPET" ]; then
   if grep -qF "$GREEN_BEGIN" "$GLOBAL_CLAUDE"; then
     awk -v rfile="$SNIPPET" -v begin="$GREEN_BEGIN" -v end="$GREEN_END" '

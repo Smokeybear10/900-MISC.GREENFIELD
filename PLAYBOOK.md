@@ -4,11 +4,13 @@ Captured 2026-05-02 from a single session that produced DESIGN.md (v1, 547 lines
 
 **Updated 2026-05-02** with lessons 9–13 (hot-path budgets, degradation matrix, state map, design-shotgun timing, refinement loop) — the four required DESIGN.md sections and the back-and-forth principle.
 
+**Updated 2026-05-03** with lesson 14 (ARCHITECTURE.md + visual companion) — separate system spec from product spec, visual mirror via Mermaid in a browser.
+
 > **Move me later:** copy this to `~/.claude/templates/greenfield-playbook.md` to reuse across projects.
 
 ---
 
-## TL;DR — the workflow in 10 steps
+## TL;DR — the workflow in 11 steps
 
 ```
   1. /office-hours              — diagnostic, premise challenge, design doc draft
@@ -17,15 +19,19 @@ Captured 2026-05-02 from a single session that produced DESIGN.md (v1, 547 lines
                                   degradation matrix, state map)
   3. /plan-ceo-review           — scope, audience, ambition; cherry-pick expansions
   4. /plan-eng-review           — architecture, schema, anti-cheat, tests, perf
-  5. /plan-design-review        — IA, state coverage, journey, mockups
-  6. /design-shotgun            — 8-10 concrete HTML mockups before reconcile
-  7. reconcile DESIGN.md against the /office-hours doc  ← easy to forget; don't
-  8. capture the prompts        — write PLAYBOOK.md + PROMPTS.md so the next session is faster
-  9. pre-build kill gates       — naming, demand validation, adjacent-product test
- 10. cleanup before first code  — inspect dir state, rename to product name, port, single git
+  5. synthesize ARCHITECTURE.md — system spec + public/architecture/index.html;
+                                  seven required sections (system overview,
+                                  components, lifecycles, state topology,
+                                  deployment topology, decision log, out of scope)
+  6. /plan-design-review        — IA, state coverage, journey, mockups
+  7. /design-shotgun            — 8-10 concrete HTML mockups before reconcile
+  8. reconcile DESIGN.md + ARCHITECTURE.md against the /office-hours doc ← don't skip
+  9. capture the prompts        — write PLAYBOOK.md + PROMPTS.md so the next session is faster
+ 10. pre-build kill gates       — naming, demand validation, adjacent-product test
+ 11. cleanup before first code  — inspect dir state, rename to product name, port, single git
 ```
 
-The order matters. Each step compounds on the last. **The reconcile step (7) is the one easiest to skip.** The cleanup step (10) is the one you'll regret skipping when your folder name doesn't match your product name in three months.
+The order matters. Each step compounds on the last. **The reconcile step (8) is the one easiest to skip.** The cleanup step (11) is the one you'll regret skipping when your folder name doesn't match your product name in three months.
 
 **Between every step**, Claude must invite user pushback ("what would you push back on?"). Greenfield is not a wizard — it is a back-and-forth. The user's context (taste, market knowledge, business relationships) only enters the plan through these checkpoints.
 
@@ -201,7 +207,9 @@ After the full workflow runs, these exist:
 | Path | What it is | Source |
 |------|-----------|--------|
 | `~/.gstack/projects/{slug}/{user}-{branch}-design-{datetime}.md` | Office-hours diagnostic | /office-hours |
-| `{repo}/DESIGN.md` | Implementable v1 spec | You write, Claude expands |
+| `{repo}/DESIGN.md` | Implementable v1 spec (product) | You write, Claude expands |
+| `{repo}/ARCHITECTURE.md` | System spec — components, lifecycles, decision log | Step 5, synthesized from /plan-eng-review |
+| `{repo}/public/architecture/index.html` | Visual companion (Mermaid in browser) | Step 5, mirrors ARCHITECTURE.md |
 | `{repo}/TODOS.md` | Pre-build blockers + v2-v5 roadmap | /plan-ceo-review + /plan-eng-review + /plan-design-review |
 | `~/.gstack/projects/{slug}/ceo-plans/{date}-{slug}.md` | CEO scope decisions | /plan-ceo-review |
 | `~/.gstack/projects/{slug}/{user}-{branch}-eng-review-test-plan-{datetime}.md` | Test plan for /qa to consume | /plan-eng-review |
@@ -334,6 +342,28 @@ Every artifact (DESIGN.md draft, each review output, design-shotgun mockups, rec
 
 The refinement loop is also why the framework is iteration-friendly. The user's context (taste, business relationships, friends-in-the-loop, market knowledge) is never fully in DESIGN.md. The checkpoints are where that context enters the plan and reshapes it.
 
+### Lesson 14: ARCHITECTURE.md is a separate artifact, with a visual companion
+
+DESIGN.md captures *what* to build (premises, hot-path budgets, degradation matrix, state map — all constraints). The eng review decides *how it's wired* but its output is buried in chat history; future-Claude opens the repo cold and has no map of the system. Without an architecture artifact, every nontrivial extension begins with re-reading every review or guessing at the structure.
+
+`ARCHITECTURE.md` at the repo root + `public/architecture/index.html` solve this. Same Mermaid source in both — `.md` is canonical, `.html` renders it visually in the browser via Mermaid CDN (no toolchain). Seven required sections: system overview, components, request lifecycles, state topology, deployment topology, decision log, out of scope.
+
+**Why a separate file, not a DESIGN.md section.**
+- Different rot rates. DESIGN.md changes when product/audience changes; ARCHITECTURE.md changes when infrastructure changes. Mixing makes both stale faster.
+- Different readers. DESIGN.md = "should we build this?" ARCHITECTURE.md = "how do I extend it without breaking something?"
+- Different forcing functions. DESIGN.md's hot-path table forces ms ceilings; ARCHITECTURE.md's components table forces specificity about file paths and ownership.
+
+**Why a visual companion, not just markdown.**
+- The system map and sequence diagrams are unreadable as text-only. Mermaid in a terminal isn't the same as Mermaid in a browser.
+- Mirrors the existing pattern: `/design-shotgun` already produces visual artifacts under `public/design/`. Cognitive load is zero.
+- The HTML is a static file with a CDN script — no build step, no dependencies in the project.
+
+**Where it goes in the workflow.** Right after `/plan-eng-review` (which is where architecture decisions get made), before `/plan-design-review` (so design review can reference concrete components). New step 5 in the 9-step flow.
+
+**Mitigation against doc rot:** the decision log section is the single most-valuable section to keep current. When something changes, add a dated entry rather than rewriting the section in place — the trail is the value.
+
+**Templates live at `~/Github/Settings/templates/architecture/`** — Claude copies them at step 5 and fills in.
+
 ---
 
 ## Quickstart for the next project
@@ -417,6 +447,8 @@ cd ~/Github/{tentative-name}
 - **One-shot design docs.** A doc you write in one pass is always wrong. The 3-review chain catches drift, the reconcile step catches what the chain itself missed.
 - **Treating greenfield as a wizard.** No refinement checkpoints between steps means you ship whatever the framework drifts toward. Always invite user pushback after each artifact.
 - **Skipping the four required DESIGN.md sections.** Premises / Hot-path budgets / Degradation matrix / State map. Each is a forcing function for a specific class of architecture decisions. Without them, those decisions get made implicitly and badly.
+- **Skipping ARCHITECTURE.md or its visual companion.** Without the system map and decision log, future-Claude opens the repo cold and re-derives the architecture badly. Without the HTML companion, the diagrams stay illegible. Both files are non-negotiable at step 5.
+- **Conflating DESIGN.md and ARCHITECTURE.md.** Product spec and system spec have different rot rates and different readers. Mixing them makes both stale faster.
 - **Naming a hot-path budget "later."** If you don't write the ms ceiling at design time, you'll architect around the wrong assumption and have to rewrite the most-used component.
 - **Skipping the degradation matrix.** This is what surfaces "can this surface run without auth/network?" The Zetamax practice/competitive split would not have happened without it.
 - **Skipping the state map.** Hydration mismatches, stale-closure bugs, and "where does this value live again?" all start here.

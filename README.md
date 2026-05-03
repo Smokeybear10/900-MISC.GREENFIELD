@@ -21,10 +21,11 @@ Type `/greenfield` in a new project.
 2. Write `DESIGN.md` from the office-hours output (250–450 lines, must include the four required sections — see below)
 3. `/plan-ceo-review`
 4. `/plan-eng-review`
-5. `/plan-design-review`
-6. `/design-shotgun` — generate 8–10 concrete HTML mockups before reconcile, not "when stuck"
-7. Reconcile `DESIGN.md` against the office-hours doc
-8. Cleanup: inspect dir, rename folder, lock dev port
+5. Synthesize `ARCHITECTURE.md` + `public/architecture/index.html` (seven required sections — see below; visual companion renders Mermaid in the browser)
+6. `/plan-design-review`
+7. `/design-shotgun` — generate 8–10 concrete HTML mockups before reconcile, not "when stuck"
+8. Reconcile `DESIGN.md` and `ARCHITECTURE.md` against the office-hours doc
+9. Cleanup: inspect dir, rename folder, lock dev port
 
 ## Refinement loop (the load-bearing principle)
 
@@ -77,6 +78,50 @@ Every piece of persistent or shared state. Catches the "does this depend on `Dat
 |---|---|---|---|---|---|
 | {state} | URL / localStorage / cookie / server / in-memory | {duration} | {who} | {who} | {what} |
 
+## ARCHITECTURE.md required sections
+
+`ARCHITECTURE.md` lives at the repo root next to `DESIGN.md`. **DESIGN.md = product (what to build). ARCHITECTURE.md = system (how it's wired).** Different rot rates, different readers — keep them separate. Templates: [`templates/architecture/`](./templates/architecture/).
+
+The visual companion at `public/architecture/index.html` is **not optional**. It uses Mermaid via CDN (no toolchain) and gives you a browser-native view of the same diagrams. The `.md` is canonical; the `.html` mirrors it.
+
+### 1. System overview
+
+One paragraph + a Mermaid `graph TD` showing top-level components and arrows (browser → edge → DB → external). Color-code by trust boundary if useful.
+
+### 2. Components
+
+| Component | Purpose | Owns | Depends on | Lives in |
+|---|---|---|---|---|
+| {name} | {one line} | {state/data} | {what it calls} | `{file path or service name}` |
+
+Be specific about file paths. This is the table future-Claude opens first when extending the system.
+
+### 3. Request lifecycles
+
+One Mermaid `sequenceDiagram` per hot-path from DESIGN.md, with the ms budget in the heading. End-to-end through real components.
+
+### 4. State topology
+
+Extends DESIGN.md's state map with the **physical** home and failure mode.
+
+| Name | Logical (DESIGN) | Physical | TTL | Failure mode |
+|---|---|---|---|---|
+| {state} | {URL/localStorage/server} | `{table.column}` or `{ls key}` | {duration} | {what breaks if missing} |
+
+### 5. Deployment topology
+
+Mermaid `graph LR` with subgraphs per environment (browser / edge / Supabase / external). Note trust boundaries and where secrets live.
+
+### 6. Decision log
+
+The load-bearing architectural calls and the *why*. Future-Claude reads this **first** to avoid relitigating settled debates.
+
+- **{decision}** — {one-line rationale}. Alternatives considered: {what else was on the table}. ({YYYY-MM-DD})
+
+### 7. Out of scope
+
+What this system intentionally does NOT do, with the reason. Prevents scope drift on every future feature ask.
+
 ## Prompts
 
 ```
@@ -101,6 +146,20 @@ what context you don't have, what's wrong. Don't proceed until I respond.
 # reviews — each one ends with a refinement checkpoint
 /plan-ceo-review
 Run /plan-eng-review now
+
+# architecture synthesis — REQUIRES the seven sections, both files mirror them
+Synthesize ARCHITECTURE.md at the repo root and public/architecture/index.html
+from the eng review's output. Copy the template from
+~/Github/Settings/templates/architecture/ and fill it in.
+Required sections (in order):
+1. System overview (paragraph + Mermaid graph TD)
+2. Components (table: name / purpose / owns / depends on / lives in)
+3. Request lifecycles (one Mermaid sequenceDiagram per hot-path)
+4. State topology (table: name / logical / physical / TTL / failure mode)
+5. Deployment topology (Mermaid graph LR with subgraphs per env)
+6. Decision log (decision / why / alternatives / date)
+7. Out of scope (what / why not)
+
 Run /plan-design-review now
 
 # concrete visuals before reconcile
@@ -108,8 +167,9 @@ Run /plan-design-review now
 # output: 8-10 HTML mockups under public/design/ — pick a direction here
 
 # reconcile
-Compare DESIGN.md against the /office-hours doc. Surface anything missing.
-Fold all [N] items into DESIGN.md
+Compare DESIGN.md and ARCHITECTURE.md against the /office-hours doc.
+Surface anything missing.
+Fold all [N] items into DESIGN.md / ARCHITECTURE.md
 
 # pre-build
 what gstack stuff should i use now
@@ -140,8 +200,10 @@ Idea validation and planning stress-test prompts (role-prompt format) live in [`
 ## Gotchas
 
 - Run `/office-hours` before any review skill.
-- Reconcile (step 7) is easy to forget; the review chain drifts.
+- Reconcile (step 8) is easy to forget; the review chain drifts.
 - The **four required DESIGN.md sections** (Premises / Hot-path budgets / Degradation matrix / State map) are non-negotiable. If Claude tries to skip them, push back.
+- The **seven required ARCHITECTURE.md sections** (System overview / Components / Lifecycles / State topology / Deployment topology / Decision log / Out of scope) are non-negotiable. Both `.md` and `public/architecture/index.html` get filled in — the visual companion is not optional.
+- DESIGN.md and ARCHITECTURE.md are **separate on purpose.** Product vs. system. Different rot rates, different readers. Resist conflating them.
 - The **refinement loop** is the framework. If Claude moves between steps without inviting pushback, stop and ask for it.
 - Run `/design-shotgun` before reconcile. Visual mockups beat adjectives.
 - `ls -la` before scaffolding (a scaffold might already exist).
@@ -153,3 +215,4 @@ Idea validation and planning stress-test prompts (role-prompt format) live in [`
 - `README.md` — this file
 - `PLAYBOOK.md` — lessons, anti-patterns
 - `PROMPTS.md` — verbatim prompts from a real session
+- `templates/architecture/` — `ARCHITECTURE.md` and `index.html` skeletons (copied per project)

@@ -233,6 +233,53 @@ Surface anything in /office-hours that's missing from DESIGN.md.`}</code>
         </tbody>
       </table>
 
+      <p>
+        <strong>If the directory is empty</strong> (no existing scaffold),
+        scaffold based on the stack chosen in <code>/plan-eng-review</code>.
+      </p>
+
+      <p>
+        <strong>Default for Next.js / Supabase web apps:</strong> clone the
+        personal starter template instead of running{' '}
+        <code>create-next-app</code>. Pre-wired with shadcn UI (9 components),
+        Supabase auth flow, project conventions in <code>CLAUDE.md</code>,
+        and a README skeleton — saves ~30 minutes of boilerplate per project.
+      </p>
+
+      <pre>
+        <code>{`gh repo create <project-name> --template Smokeybear10/nextjs-starter --private --clone
+cd <project-name>
+bun install
+cp .env.example .env.local`}</code>
+      </pre>
+
+      <p>
+        After cloning, replace the <code>{`{project-name}`}</code> placeholder
+        in the template&apos;s <code>README.md</code> and{' '}
+        <code>CLAUDE.md</code> with the actual product name.
+      </p>
+
+      <p>
+        <strong>Other stacks:</strong>
+      </p>
+      <ul>
+        <li>
+          Plain Next.js (no Supabase):{' '}
+          <code>{`bunx create-next-app@latest <name>`}</code>
+        </li>
+        <li>
+          Vite + React:{' '}
+          <code>{`bunx create-vite <name> -- --template react-ts`}</code>
+        </li>
+        <li>
+          Python / FastAPI: <code>{`uv init <name>`}</code> then{' '}
+          <code>uv add fastapi uvicorn</code>
+        </li>
+        <li>
+          T3 stack: <code>{`bunx create-t3-app <name>`}</code>
+        </li>
+      </ul>
+
       <h2>Output files</h2>
       <p>After the full workflow runs, these exist:</p>
       <table>

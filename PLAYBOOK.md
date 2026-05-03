@@ -1,26 +1,33 @@
-# Greenfield Playbook — the prompts that got Zetaprime to a shippable v1 spec + clean repo
+# Greenfield Playbook — the prompts that got Zetamax to a shippable v1 spec + clean repo
 
-Captured 2026-05-02 from a single session that produced DESIGN.md (v1, 547 lines), TODOS.md (210 lines), a test plan artifact, a CEO plan, and a clean Next.js + Supabase repo at `~/Github/Zetaprime/` ready to start building. Distilled here so the next project can run the same workflow without re-discovering it.
+Captured 2026-05-02 from a single session that produced DESIGN.md (v1, 547 lines), TODOS.md (210 lines), a test plan artifact, a CEO plan, a clean Next.js + Supabase repo at `~/Github/Zetamax/` ready to build, and 10 design-shotgun HTML mockups under `public/design/`. Distilled here so the next project can run the same workflow without re-discovering it.
+
+**Updated 2026-05-02** with lessons 9–13 (hot-path budgets, degradation matrix, state map, design-shotgun timing, refinement loop) — the four required DESIGN.md sections and the back-and-forth principle.
 
 > **Move me later:** copy this to `~/.claude/templates/greenfield-playbook.md` to reuse across projects.
 
 ---
 
-## TL;DR — the workflow in 9 steps
+## TL;DR — the workflow in 10 steps
 
 ```
   1. /office-hours              — diagnostic, premise challenge, design doc draft
-  2. write DESIGN.md            — based on the /office-hours output, not from scratch
+  2. write DESIGN.md            — based on /office-hours; MUST include the four
+                                  required sections (premises, hot-path budgets,
+                                  degradation matrix, state map)
   3. /plan-ceo-review           — scope, audience, ambition; cherry-pick expansions
   4. /plan-eng-review           — architecture, schema, anti-cheat, tests, perf
   5. /plan-design-review        — IA, state coverage, journey, mockups
-  6. reconcile DESIGN.md against the /office-hours doc  ← easy to forget; don't
-  7. capture the prompts        — write PLAYBOOK.md + PROMPTS.md so the next session is faster
-  8. pre-build kill gates       — naming, demand validation, adjacent-product test
-  9. cleanup before first code  — inspect dir state, rename to product name, port, single git
+  6. /design-shotgun            — 8-10 concrete HTML mockups before reconcile
+  7. reconcile DESIGN.md against the /office-hours doc  ← easy to forget; don't
+  8. capture the prompts        — write PLAYBOOK.md + PROMPTS.md so the next session is faster
+  9. pre-build kill gates       — naming, demand validation, adjacent-product test
+ 10. cleanup before first code  — inspect dir state, rename to product name, port, single git
 ```
 
-The order matters. Each step compounds on the last. **The reconcile step (6) is the one easiest to skip.** The cleanup step (9) is the one you'll regret skipping when your folder name doesn't match your product name in three months.
+The order matters. Each step compounds on the last. **The reconcile step (7) is the one easiest to skip.** The cleanup step (10) is the one you'll regret skipping when your folder name doesn't match your product name in three months.
+
+**Between every step**, Claude must invite user pushback ("what would you push back on?"). Greenfield is not a wizard — it is a back-and-forth. The user's context (taste, market knowledge, business relationships) only enters the plan through these checkpoints.
 
 ---
 
@@ -262,6 +269,71 @@ The Supabase Next.js starter ships email/password auth (`app/auth/login/`, `sign
 
 **Mitigation:** when inspecting an existing scaffold, note any divergences from DESIGN.md and explicitly defer the swap to a later phase. Don't try to fix in v1 if the existing code already lets you iterate.
 
+### Lesson 9: name the hot-path budget on day 0
+
+Zetamax had a 16ms keystroke-to-paint budget. Naming it explicitly drove every architecture decision after — imperative DOM update via ref, no React reconciliation in the input loop, no network in the hot path. Without the budget written down, the natural React pattern (`useState` + re-render of the problem display) would have shipped, keystrokes would have felt mushy on slow phones, and we'd have ripped out the input component to fix it.
+
+**Mitigation:** in DESIGN.md, name the 1–3 user actions that have to feel instant. Set ms ceilings. List techniques you're banning on those paths (no reconciliation, no layout reads, no network, no async). The budget is a forcing function for architecture. Without it, you make 100 small decisions that each cost 2ms and never notice until the product feels off.
+
+Template (Hot-path budgets section of DESIGN.md):
+
+| Action | Budget | What we won't do |
+|---|---|---|
+| Keystroke → typed digit appears | 16ms | React reconciliation, layout reads, network |
+| Correct answer → next problem | 32ms | Network, blocking I/O, animation delay |
+| Round end → score appears | 200ms | Sync DB writes (queue async) |
+
+The "What we won't do" column is the load-bearing one. It's a list of techniques you're banning on this path. When future-you (or an agent) tries to add an effect or a state update on this path, they hit a written rule, not a vibe.
+
+### Lesson 10: degradation matrix forces the surface split
+
+The Zetamax practice/competitive split came from user instinct ("I want localhost first, no auth"). It wasn't in any review output, but it was the single most architecture-shaping decision in the build — practice ships without Supabase, competitive layers on auth + leaderboards. It nearly didn't happen because no skill in the chain forced the question.
+
+**Mitigation:** DESIGN.md gets a degradation matrix at the top. Three columns: "no JS?", "no auth?", "no network?". For every surface in the product, fill in yes/no. Even when most answers are "no", writing them down surfaces the cost. For Zetamax, "/practice: yes/yes/yes; /competitive: no/no/no" justified building practice first — testable, deployable, no backend dependency.
+
+Template (Degradation matrix section of DESIGN.md):
+
+| Surface | No JS? | No auth? | No network? |
+|---|---|---|---|
+| `/` (menu) | partial | yes | yes |
+| `/practice` | no | yes | yes (localStorage) |
+| `/competitive` | no | no | no |
+
+### Lesson 11: persistent state map catches SSR/hydration bugs at design time
+
+A `Date.now()` in the practice seed string caused a hydration mismatch — server-rendered HTML had one seed, client had another. Hard to debug if you don't already know what to look for. A "state map" table at design time would have surfaced it: "seed renders server-side; can't depend on Date.now()."
+
+**Mitigation:** DESIGN.md gets a state map table. Every piece of persistent or shared state with: name / lives in (URL / localStorage / cookie / server / in-memory) / lifetime / who reads / who writes / fallback if missing.
+
+Template (State map section of DESIGN.md):
+
+| Name | Lives in | Lifetime | Read by | Written by | Fallback |
+|---|---|---|---|---|---|
+| practice seed | in-memory (deterministic from drillKey) | per-mount | drill engine | client `useState` | new seed on remount |
+| practice config | localStorage `zetamax:practice-config` | persistent | settings modal, drill | settings modal | `PRACTICE_DEFAULTS` |
+| local history | localStorage `zetamax:practice-history` | persistent (100 cap) | menu, post-round | post-round save | empty array |
+| competitive run | server `runs` table | persistent | leaderboard RPC | API routes | n/a |
+
+Even a 5-row table catches the entire "does this depend on `Date.now()` and break SSR?" class of bugs.
+
+### Lesson 12: design-shotgun runs before reconcile, not "later"
+
+10 concrete HTML mockups in 30 minutes beat hours of design-consultation text. Concrete > abstract every time. Once you have visuals, picking a direction takes seconds; without them, you stay stuck in adjectives ("cinematic", "minimalist", "data-dense") that never converge.
+
+**Mitigation:** `/design-shotgun` is step 6 of the standard workflow, before reconcile. Not a tool to reach for when stuck. The HTML mockups become a permanent reference for the entire build — `public/design/` ships as static comparison boards for any future redesign.
+
+### Lesson 13: the refinement loop is the framework
+
+The single biggest framework win in this session was the user pushing back at every step. CEO review proposed a daily-gate Wordle clone — user said no, snap back to office-hours premise #1. Default cinematic mockup landed wrong — user said go more Apple-like. Settings UX needed three rounds of micro-tweaks (manual input not preset chips, bottom-right not top-right, more prominent chip not faint icon). Without the user as the load-bearing voice at every checkpoint, the framework would have shipped the wrong product.
+
+**Mitigation:** between every major step, Claude explicitly invites pushback:
+
+> "Here's what we have. What context do you have that I don't? What would you change?"
+
+Every artifact (DESIGN.md draft, each review output, design-shotgun mockups, reconcile delta) gets a refinement checkpoint before moving on. Greenfield is **not a wizard** — it is a back-and-forth. If Claude is silently moving between steps, the framework is being misused. Stop and ask for the checkpoint.
+
+The refinement loop is also why the framework is iteration-friendly. The user's context (taste, business relationships, friends-in-the-loop, market knowledge) is never fully in DESIGN.md. The checkpoints are where that context enters the plan and reshapes it.
+
 ---
 
 ## Quickstart for the next project
@@ -343,6 +415,12 @@ cd ~/Github/{tentative-name}
 - **Building before validating demand.** Pre-build kill gates are non-negotiable for greenfield products.
 - **Skipping /office-hours.** The diagnostic catches premise problems that no review skill can recover from.
 - **One-shot design docs.** A doc you write in one pass is always wrong. The 3-review chain catches drift, the reconcile step catches what the chain itself missed.
+- **Treating greenfield as a wizard.** No refinement checkpoints between steps means you ship whatever the framework drifts toward. Always invite user pushback after each artifact.
+- **Skipping the four required DESIGN.md sections.** Premises / Hot-path budgets / Degradation matrix / State map. Each is a forcing function for a specific class of architecture decisions. Without them, those decisions get made implicitly and badly.
+- **Naming a hot-path budget "later."** If you don't write the ms ceiling at design time, you'll architect around the wrong assumption and have to rewrite the most-used component.
+- **Skipping the degradation matrix.** This is what surfaces "can this surface run without auth/network?" The Zetamax practice/competitive split would not have happened without it.
+- **Skipping the state map.** Hydration mismatches, stale-closure bugs, and "where does this value live again?" all start here.
+- **Reaching for /design-shotgun "when stuck."** Run it as a normal step, before reconcile. 10 HTML mockups in 30 minutes converge faster than hours of design-consultation text.
 - **Taking the first effort estimate as truth.** Always cross-check against an earlier, more carefully written number.
 - **"We'll add anti-cheat later."** For products with leaderboards or rankings, this is a v1 architecture decision.
 - **Letting Claude make scope decisions.** Use AskUserQuestion options. The user always has context Claude doesn't.

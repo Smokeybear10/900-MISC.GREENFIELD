@@ -48,7 +48,16 @@ nav {
   -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+}
+
+.nav-group {
+  display: flex;
+  align-items: baseline;
   gap: 1.25rem;
+  flex-wrap: wrap;
 }
 
 nav a {
@@ -67,6 +76,123 @@ nav .logo {
   color: var(--accent);
   font-weight: 700;
   margin-right: 0.5rem;
+}
+
+nav .nav-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--border);
+  font-family: 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+  font-weight: 600;
+  margin-right: -0.25rem;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: color 0.15s;
+}
+
+.dropdown-trigger:hover,
+.dropdown[data-open='true'] .dropdown-trigger {
+  color: var(--accent);
+}
+
+.dropdown .chevron {
+  font-size: 0.65rem;
+  opacity: 0.7;
+  transition: transform 0.18s ease;
+}
+
+.dropdown[data-open='true'] .chevron {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 220px;
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.12);
+  animation: dropdown-in 0.12s ease-out;
+}
+
+/* Invisible bridge above menu so the cursor can travel from trigger
+   to menu without triggering mouseleave. */
+.dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -0.625rem;
+  left: 0;
+  right: 0;
+  height: 0.625rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dropdown-menu {
+    box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-menu a {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.75rem;
+  border-radius: 5px;
+  text-decoration: none;
+  color: var(--fg);
+  transition: background 0.1s;
+}
+
+.dropdown-menu a:hover {
+  background: var(--code-bg);
+}
+
+.dropdown-menu .menu-name {
+  font-family: 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.dropdown-menu .menu-desc {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.125rem;
 }
 
 main {

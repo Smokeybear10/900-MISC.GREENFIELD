@@ -1,5 +1,6 @@
 import './globals.css'
 import Link from 'next/link'
+import { SkillsDropdown } from './SkillsDropdown'
 
 export const metadata = {
   title: '/GREEN — Claude Code skills',
@@ -15,13 +16,16 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <nav>
-          <Link href="/" className="logo">/GREEN</Link>
-          <Link href="/greenfield">greenfield</Link>
-          <Link href="/prompt-engineer">prompt-engineer</Link>
-          <Link href="/menu">menu</Link>
-          <Link href="/prompts">prompts</Link>
-          <Link href="/rules">rules</Link>
-          <Link href="/git">git</Link>
+          <div className="nav-group">
+            <Link href="/" className="logo">/GREEN</Link>
+            <SkillsDropdown />
+          </div>
+          <div className="nav-group">
+            <span className="nav-label" aria-hidden>reference</span>
+            <Link href="/prompts">prompts</Link>
+            <Link href="/rules">rules</Link>
+            <Link href="/git">git</Link>
+          </div>
         </nav>
         {children}
       </body>

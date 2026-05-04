@@ -29,6 +29,22 @@ If the user mentions an error or behavior, treat it as ground truth. Do **not** 
 
 **No package.json equivalent at all** — Note that lint/test commands are unknown; include placeholders for them in the output prompt rather than inventing.
 
+## Step 1.5 — Clarify before synthesizing
+
+After inspection, identify what's genuinely ambiguous in the user's input. Common gaps:
+
+- **Goal type** — bug fix / new feature / refactor / investigation only
+- **Scope** — single function / single file / module / cross-cutting
+- **Behavior preservation** — must preserve X? free to change Y?
+- **Output rigor** — ship-it-quick / tested / fully verified with lint + typecheck + browser
+- **File ambiguity** — inspection surfaced two candidates matching a vague description; which one?
+
+Ask up to **4 questions in a single `AskUserQuestion` tool call**. Each option must be specific (not yes/no). Mark the most likely answer with `(recommended)` based on what inspection showed.
+
+**Smart-skip:** do NOT ask a question the user's input already answers. "fix the bug in lib/auth.ts" → don't ask goal or which file. "with tests" → don't ask rigor. If after smart-skipping zero questions remain, skip Step 1.5 entirely and proceed straight to Step 2. If 4+ remain, pick the 4 most decision-shaping; placeholders can cover the rest.
+
+Use answers to inform Step 2 silently — bake them into goal, constraints, scope, and verification. Do not echo back "you answered X."
+
 ## Step 2 — Synthesize the improved prompt
 
 Use the gathered context to produce a Claude Code prompt that:
@@ -53,7 +69,7 @@ If context is genuinely missing after inspection, include placeholders so the us
 - Do **not** solve the coding task yourself.
 - Do **not** edit any files.
 - Do **not** invent file paths, library names, or commands you didn't observe.
-- Only produce the improved prompt — nothing else.
+- Only produce the improved prompt — nothing else. (`AskUserQuestion` calls in Step 1.5 are permitted as inputs; your final user-facing output remains the improved prompt only, with no recap of questions or answers.)
 
 ## Return only this format
 

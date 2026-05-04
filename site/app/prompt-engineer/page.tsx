@@ -15,11 +15,17 @@ export default function PromptEngineer() {
 
       <h2>What it does</h2>
       <p>
-        Takes a vague description of what you want to build or fix, then runs
-        a two-step process: first <strong>inspects the repo</strong> (file
+        Takes a rough description of what you want to build or fix, then runs
+        a three-step process: first <strong>inspects the repo</strong> (file
         listing, git state, dependencies, mentioned files), then{' '}
-        <strong>synthesizes a polished prompt</strong> using verified paths
-        and real stack context.
+        <strong>clarifies anything ambiguous</strong> by asking up to four
+        targeted questions via <code>AskUserQuestion</code>, then{' '}
+        <strong>synthesizes a polished prompt</strong> using verified paths,
+        real stack context, and your answers.
+      </p>
+      <p>
+        Smart-skips questions you already answered in your input. Specific
+        prompts go straight through; vague ones get a short Q&amp;A first.
       </p>
 
       <h2>When to use it</h2>
@@ -96,6 +102,52 @@ cd ~/Github/Settings && ./install.sh`}</code>
         not try to reproduce or debug.
       </p>
 
+      <h3>Step 1.5 — clarify before synthesizing</h3>
+      <p>
+        After inspection, identifies what&apos;s genuinely ambiguous and asks
+        up to <strong>four questions in a single <code>AskUserQuestion</code>
+        call</strong>. Common gaps:
+      </p>
+      <ul>
+        <li>
+          <strong>Goal type</strong> — bug fix / new feature / refactor /
+          investigation only
+        </li>
+        <li>
+          <strong>Scope</strong> — single function / single file / module /
+          cross-cutting
+        </li>
+        <li>
+          <strong>Behavior preservation</strong> — must preserve X? free to
+          change Y?
+        </li>
+        <li>
+          <strong>Output rigor</strong> — ship-it-quick / tested / fully
+          verified with lint + typecheck + browser
+        </li>
+        <li>
+          <strong>File ambiguity</strong> — inspection surfaced two candidates;
+          which one?
+        </li>
+      </ul>
+      <p>
+        Each option is specific (no yes/no), with the most likely answer
+        labeled <code>(recommended)</code> based on what inspection showed.
+        Free-text via the <code>Other</code> field is always available.
+      </p>
+      <p>
+        <strong>Smart-skip rule:</strong> a question is skipped entirely if
+        your input already answers it. Name a file? No file question. Say
+        &quot;with tests&quot;? No rigor question. If everything is
+        smart-skipped, the skill goes straight to Step 2 with no questions
+        asked. If 4+ remain, picks the 4 most decision-shaping; placeholders
+        cover the rest.
+      </p>
+      <p>
+        Answers are baked into Step 2 silently — no &quot;you said X&quot;
+        recap, no commentary. The output is still just the polished prompt.
+      </p>
+
       <h3>Step 2 — synthesize</h3>
       <p>Produces a Claude Code prompt that:</p>
       <ul>
@@ -148,8 +200,9 @@ cd ~/Github/Settings && ./install.sh`}</code>
         <code>/prompt-engineer fix auth</code>
       </pre>
       <p>
-        Too vague. Skill returns a prompt with mostly placeholders — you
-        haven&apos;t given it enough to inspect.
+        Too vague. Skill fires Step 1.5 and asks you which auth file, what
+        kind of fix, what to preserve, and what rigor you want — answering
+        all four in chat takes longer than typing the better version below.
       </p>
 
       <h3>Better</h3>

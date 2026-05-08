@@ -18,22 +18,11 @@ export default function Teach() {
       <p>
         Five steps every invocation: <strong>classify</strong> the subject
         (file, concept, or library), <strong>calibrate depth</strong> (gloss /
-        standard / deep dive — defaults to deep), <strong>teach</strong> using
-        a fixed structure, then <strong>offer follow-ups</strong> — three
-        subtopics a curious learner would naturally ask next, plus a free-text
-        field where you type whatever else you want clarified, plus a silent
-        exit. Picking any non-exit option restarts the loop on the new
-        subject.
-      </p>
-      <p>
-        Every response follows the same shape: a one-sentence{' '}
-        <strong>TL;DR</strong>, a <strong>mental model</strong> (with concrete
-        decomposition for abstract subjects), <strong>how it works</strong>,{' '}
-        <strong>two examples</strong> (one minimal, one realistic), a{' '}
-        <strong>visual</strong> when it would replace 3+ sentences of prose,
-        and at Deep dive depth, a <strong>connections</strong> closer that
-        links to adjacent concepts. Depth changes density, not which sections
-        appear.
+        standard / deep dive — defaults to deep), <strong>teach</strong> at
+        that depth, then <strong>offer follow-ups</strong> — three subtopics a
+        curious learner would naturally ask next, plus a free-text field where
+        you type whatever else you want clarified, plus a silent exit. Picking
+        any non-exit option restarts the loop on the new subject.
       </p>
 
       <h2>When to use it</h2>
@@ -122,103 +111,32 @@ cd ~/Github/Settings && ./install.sh`}</code>
       </p>
 
       <h3>Step 2 — calibrate depth</h3>
-      <p>
-        Depth controls <em>density</em>, not which sections appear. All three
-        depths produce the same structural elements; what changes is how much
-        each is unpacked.
-      </p>
+      <p>Three options, default to deep dive:</p>
       <ul>
         <li>
-          <strong>Quick gloss</strong> — sections compressed; minimal example
-          only, no pitfalls section
+          <strong>Quick gloss</strong> — 1–2 paragraphs, &quot;what it is and
+          why it exists&quot;
         </li>
         <li>
-          <strong>Standard</strong> — full sections with normal elaboration
+          <strong>Standard</strong> — high-level + deep dive in one response,
+          ~400 words
         </li>
         <li>
-          <strong>Deep dive (default)</strong> — full sections, extended
-          elaboration, common pitfalls, the &quot;connections&quot; closer
+          <strong>Deep dive (default)</strong> — multi-section: mental model,
+          mechanics, common pitfalls, worked examples
         </li>
       </ul>
 
       <h3>Step 3 — teach</h3>
-      <p>
-        Every response is structurally the same, in this order:
-      </p>
-      <ol>
-        <li>
-          <strong>TL;DR</strong> — one bolded sentence a smart 12-year-old
-          could grasp. If you can&apos;t compress the subject to one sentence,
-          you don&apos;t understand it well enough to teach it.
-        </li>
-        <li>
-          <strong>Mental model</strong> — the picture in the user&apos;s head
-          after reading. For abstract subjects, decomposes into something
-          concrete the user already knows (e.g. &quot;you&apos;ve used
-          <code>Promise.then</code>; that&apos;s a monad — here&apos;s what
-          generalizes&quot;). Reductions over fresh metaphors.
-        </li>
-        <li>
-          <strong>How it works</strong> — the mechanics. At Deep dive depth,
-          common pitfalls and edge cases.
-        </li>
-        <li>
-          <strong>Two examples</strong> — both required at Standard and Deep
-          dive:
-          <ul>
-            <li>
-              <strong>Minimal</strong> — smallest possible illustration.
-            </li>
-            <li>
-              <strong>Realistic</strong> — what it actually looks like in
-              production. Real values, real complications.
-            </li>
-          </ul>
-        </li>
-        <li>
-          <strong>Visual</strong> — when prose alone would take ≥3 sentences
-          to convey what a table or diagram conveys instantly. See visual
-          policy below.
-        </li>
-        <li>
-          <strong>Connections</strong> (Deep dive only) — one short paragraph
-          linking to adjacent concepts the user has likely encountered.
-        </li>
-      </ol>
-      <p>
-        No filler. No &quot;great question.&quot; No &quot;hope that
-        helped.&quot; No closing recap.
-      </p>
-
-      <h4>Visual policy</h4>
-      <p>
-        Use a visual when it would replace ≥3 sentences of prose. Match the
-        format to the subject:
-      </p>
+      <p>Always:</p>
       <ul>
-        <li>
-          <strong>Markdown tables</strong> — for comparisons (X vs Y,
-          side-by-side trade-offs). The single most under-used format.
-        </li>
-        <li>
-          <strong>ASCII / box diagrams</strong> — for system flows, data
-          movement, state transitions. Always renders in any terminal.
-        </li>
-        <li>
-          <strong>Code blocks</strong> — for code, syntax, configuration.
-        </li>
-        <li>
-          <strong>Math equations</strong> — plain-text math, not LaTeX:
-          {' '}<code>P&L = max(S - K, 0) - premium</code>.
-        </li>
-        <li>
-          <strong>Mermaid syntax</strong> — for sequence diagrams, state
-          machines. Rendering depends on the surface; prefer ASCII in the
-          terminal.
-        </li>
+        <li>One-line &quot;what it is&quot; opener</li>
+        <li>Body at the chosen depth</li>
+        <li>One concrete example — code if technical, analogy if abstract</li>
       </ul>
       <p>
-        Skip the visual if it would be smaller than the prose it replaces.
+        No filler. No &quot;great question.&quot; No &quot;hope that
+        helped.&quot;
       </p>
 
       <h3>Step 4 — offer follow-ups</h3>
@@ -310,24 +228,6 @@ cd ~/Github/Settings && ./install.sh`}</code>
         <li>
           <strong>Ephemeral.</strong> Saves nothing to disk. No notes, no
           history, no learning log.
-        </li>
-        <li>
-          <strong>TL;DR is mandatory.</strong> Every response opens with one
-          bolded sentence. No exceptions, regardless of depth.
-        </li>
-        <li>
-          <strong>Two examples are mandatory</strong> at Standard and Deep
-          dive depth: minimal + realistic. Quick gloss may use the minimal
-          only.
-        </li>
-        <li>
-          <strong>Visual when applicable.</strong> If 3+ sentences could be
-          replaced by a table or diagram, the table or diagram appears.
-        </li>
-        <li>
-          <strong>Abstract subjects must decompose into something concrete.</strong>{' '}
-          Lead with the concrete instance, derive the abstraction from it. No
-          fresh metaphors when a structural reduction works.
         </li>
         <li>
           <strong>Always offers exit.</strong> Step 4 always includes

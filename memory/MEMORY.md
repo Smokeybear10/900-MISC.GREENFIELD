@@ -1,1 +1,0 @@
-- [Visual companions for /GREEN artifacts](feedback_visual_artifacts.md) — for any new /GREEN artifact, propose `.md` + `.html` (Mermaid via CDN), not text-only.

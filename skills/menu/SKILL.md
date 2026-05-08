@@ -1,3 +1,14 @@
+---
+name: menu
+version: 0.1.0
+description: |
+  Show the curated list of gstack skills the user actually reaches for,
+  organized by category and labeled with both *when to use* and *what it
+  does*. Use when asked to "show me the skills", "what skills do I have",
+  "list my commands", "show the menu", "what can you do", or /menu.
+allowed-tools: []
+---
+
 Show the user this curated list of gstack skills, organized by category and labeled with both *when to use* and *what it does*. Present it cleanly — no extra commentary, no follow-up questions, no suggestions unless the user asks.
 
 ### Idea + planning

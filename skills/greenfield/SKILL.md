@@ -1,3 +1,26 @@
+---
+name: greenfield
+version: 0.1.0
+description: |
+  Walk the user through a 9-step greenfield project bootstrap. Take a vague
+  idea and produce a reconciled DESIGN.md, ARCHITECTURE.md (with HTML
+  companion), reviewed plans, and a scaffolded project ready to build.
+  Heavy use of refinement checkpoints between steps — the user drives
+  decisions, not Claude. Combines four gstack review skills with
+  architecture synthesis, design shotgun, and a reconciliation step.
+  Use when starting a brand-new project, asked to "bootstrap a new project",
+  "start from scratch", "scaffold a new app", "begin a greenfield project",
+  or /greenfield.
+allowed-tools:
+  - Bash
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - AskUserQuestion
+---
+
 You are walking the user through a 9-step greenfield project bootstrap. The goal: take a vague idea and turn it into a shippable v1 spec + clean repo, ready to build. Combines four gstack skills with architecture synthesis, design shotgun, and a reconciliation step that catches drift.
 
 Walk the user through the steps in order. At each step, tell them what to type and what to expect. Apply the decision defaults below unless the user has reason to deviate. Surface scope decisions via AskUserQuestion — never make them for the user.

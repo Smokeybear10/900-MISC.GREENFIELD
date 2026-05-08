@@ -12,13 +12,10 @@ CLAUDE_DIR="$HOME/.claude"
 COMMANDS_DIR="$CLAUDE_DIR/commands"
 SKILLS_DIR="$CLAUDE_DIR/skills"
 GLOBAL_CLAUDE="$CLAUDE_DIR/CLAUDE.md"
-CONFIG_SRC_DIR="$REPO_DIR/config"
-SNIPPET="$CONFIG_SRC_DIR/CLAUDE.md.snippet"
-RULES_SRC="$CONFIG_SRC_DIR/RULES.md"
-COMMANDS_SRC_DIR="$REPO_DIR/commands"
+SNIPPET="$REPO_DIR/.claude/CLAUDE.md.snippet"
+RULES_SRC="$REPO_DIR/RULES.md"
+COMMANDS_SRC_DIR="$REPO_DIR/.claude/commands"
 SKILLS_SRC_DIR="$REPO_DIR/skills"
-MEMORY_SRC_DIR="$REPO_DIR/memory"
-MEMORY_DST_DIR="$CLAUDE_DIR/projects/-Users-$(whoami)-Github-Settings/memory"
 GREEN_BEGIN="<!-- greenfield-framework:begin -->"
 GREEN_END="<!-- greenfield-framework:end -->"
 RULES_BEGIN="<!-- rules:begin -->"
@@ -120,47 +117,6 @@ if [ -f "$SNIPPET" ]; then
     } >> "$GLOBAL_CLAUDE"
     echo "  CLAUDE.md: /GREEN section appended"
   fi
-fi
-
-# 5. Symlink settings.json and keybindings.json from config/ into ~/.claude/
-if [ -d "$CONFIG_SRC_DIR" ]; then
-  for fname in settings.json keybindings.json; do
-    src="$CONFIG_SRC_DIR/$fname"
-    dst="$CLAUDE_DIR/$fname"
-    [ -f "$src" ] || continue
-    if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
-      echo "  $fname: already symlinked"
-    else
-      if [ -e "$dst" ]; then
-        backup="$dst.bak.$(date +%s)"
-        mv "$dst" "$backup"
-        echo "  $fname: existing file backed up to $backup"
-      fi
-      ln -sf "$src" "$dst"
-      echo "  $fname: symlinked → $src"
-    fi
-  done
-fi
-
-# 6. Symlink memory/ contents into the project-scoped memory dir
-if [ -d "$MEMORY_SRC_DIR" ]; then
-  mkdir -p "$MEMORY_DST_DIR"
-  for src in "$MEMORY_SRC_DIR"/*.md; do
-    [ -f "$src" ] || continue
-    fname=$(basename "$src")
-    dst="$MEMORY_DST_DIR/$fname"
-    if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
-      echo "  memory/$fname: already symlinked"
-    else
-      if [ -e "$dst" ]; then
-        backup="$dst.bak.$(date +%s)"
-        mv "$dst" "$backup"
-        echo "  memory/$fname: existing file backed up to $backup"
-      fi
-      ln -sf "$src" "$dst"
-      echo "  memory/$fname: symlinked → $src"
-    fi
-  done
 fi
 
 echo ""

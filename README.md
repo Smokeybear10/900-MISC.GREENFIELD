@@ -212,32 +212,7 @@ Idea validation and planning stress-test prompts (role-prompt format) live in [`
 
 ## Files
 
-```
-README.md            this file
-PLAYBOOK.md          lessons, anti-patterns
-PROMPTS.md           reusable role-prompt templates
-install.sh           idempotent installer; symlinks into ~/.claude/
-
-commands/            single-file slash commands
-  greenfield.md        /greenfield — this workflow
-  menu.md              /menu — curated skill list
-  prompt-engineer.md   /prompt-engineer — polish a rough prompt
-
-skills/              multi-file skills (folder + SKILL.md)
-  teach/SKILL.md       /teach — structured teaching loop
-
-config/              everything that gets installed into ~/.claude/
-  RULES.md             synced into ~/.claude/CLAUDE.md (rules block)
-  CLAUDE.md.snippet    synced into ~/.claude/CLAUDE.md (/GREEN block)
-  settings.json        → ~/.claude/settings.json
-  keybindings.json     → ~/.claude/keybindings.json
-
-memory/              project-scoped auto-memory
-  MEMORY.md            index
-  feedback_*.md        individual entries
-
-templates/           scaffolding used by /greenfield
-  architecture/        ARCHITECTURE.md + index.html skeletons
-
-site/                Next.js companion site
-```
+- `README.md` — this file
+- `PLAYBOOK.md` — lessons, anti-patterns
+- `PROMPTS.md` — verbatim prompts from a real session
+- `templates/architecture/` — `ARCHITECTURE.md` and `index.html` skeletons (copied per project)

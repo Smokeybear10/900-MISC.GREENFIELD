@@ -31,6 +31,8 @@ Show the user this curated list of gstack skills, organized by category and labe
 
 **`/design-review`** — *Use when a UI is built and live, before shipping.* Designer's eye QA on the running site. Catches visual inconsistency, spacing issues, hierarchy, AI-slop patterns, slow interactions. Iteratively fixes and re-verifies with before/after screenshots.
 
+**`/brand-kit`** — *Use when a project needs an identity — name, mark, palette, type, app icons.* Reads project context deeply, generates THREE complete brand directions (different mark + palette + type voice for each) side-by-side in `brand-explore.html`, then commits to a single ~750-line `brand.html` with the chosen direction. Domain-driven SVG marks, app icon mockups (iOS / macOS / Android / browser), wordmark lockups, downloadable assets.
+
 ### During build
 
 **`/investigate`** — *Use when something's broken and you don't know why.* Systematic four-phase debugging: investigate → analyze → hypothesize → implement. Iron Law: no fixes without root cause first.

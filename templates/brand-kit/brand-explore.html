@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{PROJECT_NAME}} · Brand Exploration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="{{GOOGLE_FONTS_URL}}" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0A0A0B;
+    color: #E5E7EB;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: #facc15; color: #0A0A0B; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ── Top utility bar ───────────────────────────────────────── */
+  .util {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 28px;
+    border-bottom: 1px solid #1F2937;
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #9CA3AF;
+  }
+  .util .crumb strong { color: #E5E7EB; font-weight: 600; }
+  .util .step { color: #FBBF24; }
+
+  /* ── Page header ───────────────────────────────────────────── */
+  .page-head {
+    padding: 64px 28px 36px;
+    text-align: center;
+  }
+  .page-head .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #FBBF24;
+    margin-bottom: 18px;
+  }
+  .page-head h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: -0.02em;
+    color: #F9FAFB;
+    margin-bottom: 14px;
+  }
+  .page-head h1 em { color: #FBBF24; font-style: normal; }
+  .page-head .lede {
+    max-width: 620px;
+    margin: 0 auto;
+    color: #9CA3AF;
+    font-size: 15px;
+  }
+  .page-head .meta {
+    margin-top: 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    color: #6B7280;
+    text-transform: uppercase;
+  }
+
+  /* ── Three-column grid ─────────────────────────────────────── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #1F2937;
+    border-top: 1px solid #1F2937;
+    border-bottom: 1px solid #1F2937;
+  }
+
+  .dir {
+    --bg: #0A0A0B;
+    --surface: #11151D;
+    --primary: #FBBF24;
+    --text: #E5E7EB;
+    --muted: #9CA3AF;
+    --accent: #EF4444;
+    --display: 'Inter', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    padding: 56px 32px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    position: relative;
+    transition: filter .25s;
+  }
+  .dir:hover { filter: brightness(1.04); }
+
+  /* Per-direction CSS-variable overrides — populated from {{TOKENS}} */
+  .dir.a {
+    --bg: {{DIR_A_BG}};
+    --surface: {{DIR_A_SURFACE}};
+    --primary: {{DIR_A_PRIMARY}};
+    --text: {{DIR_A_TEXT}};
+    --muted: {{DIR_A_MUTED}};
+    --accent: {{DIR_A_ACCENT}};
+    --display: {{DIR_A_FONT_DISPLAY}};
+    --body: {{DIR_A_FONT_BODY}};
+    --mono: {{DIR_A_FONT_MONO}};
+  }
+  .dir.b {
+    --bg: {{DIR_B_BG}};
+    --surface: {{DIR_B_SURFACE}};
+    --primary: {{DIR_B_PRIMARY}};
+    --text: {{DIR_B_TEXT}};
+    --muted: {{DIR_B_MUTED}};
+    --accent: {{DIR_B_ACCENT}};
+    --display: {{DIR_B_FONT_DISPLAY}};
+    --body: {{DIR_B_FONT_BODY}};
+    --mono: {{DIR_B_FONT_MONO}};
+  }
+  .dir.c {
+    --bg: {{DIR_C_BG}};
+    --surface: {{DIR_C_SURFACE}};
+    --primary: {{DIR_C_PRIMARY}};
+    --text: {{DIR_C_TEXT}};
+    --muted: {{DIR_C_MUTED}};
+    --accent: {{DIR_C_ACCENT}};
+    --display: {{DIR_C_FONT_DISPLAY}};
+    --body: {{DIR_C_FONT_BODY}};
+    --mono: {{DIR_C_FONT_MONO}};
+  }
+
+  /* ── Per-column header (badge + name + register) ───────────── */
+  .dir-head {
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+    padding-bottom: 14px;
+  }
+  .dir-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.2px;
+    color: var(--primary);
+    text-transform: uppercase;
+  }
+  .dir-register {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: right;
+  }
+  .dir-name {
+    font-family: var(--display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 4px;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Mark stage ────────────────────────────────────────────── */
+  .mark-stage {
+    aspect-ratio: 1;
+    background: var(--surface);
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .mark-stage::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--text) 6%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--text) 6%, transparent) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: 0.5;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+  .mark-stage svg {
+    width: 50%; height: 50%;
+    color: var(--primary);
+    position: relative; z-index: 1;
+    transition: transform .8s cubic-bezier(.2,.8,.2,1);
+  }
+  .mark-stage:hover svg { transform: rotate(45deg) scale(1.04); }
+
+  /* ── Wordmark + tagline ────────────────────────────────────── */
+  .wordmark {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .wordmark em {
+    color: var(--primary);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .tagline {
+    font-family: var(--body);
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.55;
+    border-left: 2px solid var(--primary);
+    padding-left: 14px;
+  }
+
+  /* ── Palette row ───────────────────────────────────────────── */
+  .palette-section {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .palette-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+  }
+  .swatch {
+    aspect-ratio: 1;
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+    position: relative;
+    cursor: default;
+  }
+  .swatch .hex {
+    position: absolute;
+    bottom: -18px;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .swatch:hover .hex { opacity: 1; }
+
+  /* ── Type stack ────────────────────────────────────────────── */
+  .type-stack { display: flex; flex-direction: column; gap: 14px; }
+  .type-row {
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 10px 0;
+    border-top: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+  }
+  .type-row:first-child { border-top: 0; padding-top: 0; }
+  .type-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .type-sample.display {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .type-sample.body {
+    font-family: var(--body);
+    font-size: 14px;
+    color: var(--text);
+  }
+  .type-sample.mono {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .type-name {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  /* ── Rationale ─────────────────────────────────────────────── */
+  .rationale {
+    font-family: var(--body);
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    padding: 16px;
+    background: color-mix(in srgb, var(--surface) 60%, var(--bg));
+    border-left: 2px solid var(--accent);
+  }
+  .rationale strong { color: var(--text); font-weight: 600; }
+
+  /* ── Choose CTA ────────────────────────────────────────────── */
+  .choose {
+    margin-top: auto;
+    background: var(--primary);
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 0;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: filter .15s;
+    text-align: center;
+    font-weight: 600;
+  }
+  .choose:hover { filter: brightness(1.1); }
+  .choose .key {
+    background: color-mix(in srgb, var(--bg) 25%, transparent);
+    color: var(--bg);
+    padding: 2px 6px;
+    margin-right: 8px;
+    font-weight: 700;
+  }
+
+  /* ── How to choose (footer) ────────────────────────────────── */
+  .footer {
+    padding: 56px 28px;
+    border-top: 1px solid #1F2937;
+    background: #0A0A0B;
+    text-align: center;
+  }
+  .footer .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #FBBF24;
+    margin-bottom: 14px;
+  }
+  .footer h2 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: #F9FAFB;
+    margin-bottom: 12px;
+  }
+  .footer p {
+    color: #9CA3AF;
+    max-width: 560px;
+    margin: 0 auto;
+    font-size: 14px;
+  }
+  .footer code {
+    font-family: 'JetBrains Mono', monospace;
+    background: #11151D;
+    color: #FBBF24;
+    padding: 2px 6px;
+    font-size: 12px;
+  }
+
+  /* ── Responsive ────────────────────────────────────────────── */
+  @media (max-width: 1100px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Top utility bar ─────────────────────────────────────────── -->
+<div class="util">
+  <span class="crumb"><strong>{{PROJECT_NAME}}</strong> &nbsp;/&nbsp; Brand &nbsp;/&nbsp; Exploration</span>
+  <span class="step">step 1 of 2 · pick a direction</span>
+</div>
+
+<!-- ── Page header ────────────────────────────────────────────── -->
+<header class="page-head">
+  <div class="eyebrow">Brand Exploration</div>
+  <h1>Three directions for <em>{{PROJECT_NAME}}</em></h1>
+  <p class="lede">Each column is its own complete brand — a different mark, palette, and voice. Pick one, mix two, or ask for a fourth in a different register.</p>
+  <div class="meta">A · B · C  ·  full kit follows the choice</div>
+</header>
+
+<!-- ── Three directions, side by side ─────────────────────────── -->
+<div class="grid">
+
+  <!-- ── DIRECTION A ────────────────────────────────────────── -->
+  <div class="dir a">
+    <div class="dir-head">
+      <div>
+        <div class="dir-badge">A · {{DIR_A_REGISTER}}</div>
+        <div class="dir-name">{{DIR_A_NAME}}</div>
+      </div>
+      <div class="dir-register">{{DIR_A_PALETTE_NOTE}}</div>
+    </div>
+
+    <div class="mark-stage">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        {{DIR_A_MARK_INNER}}
+      </svg>
+    </div>
+
+    <div class="wordmark">{{DIR_A_WORDMARK}}</div>
+    <div class="tagline">{{DIR_A_TAGLINE}}</div>
+
+    <div class="palette-section">
+      <div class="section-label">Palette</div>
+      <div class="palette-row">
+        <div class="swatch" style="background: {{DIR_A_BG}};"><span class="hex">{{DIR_A_BG}}</span></div>
+        <div class="swatch" style="background: {{DIR_A_SURFACE}};"><span class="hex">{{DIR_A_SURFACE}}</span></div>
+        <div class="swatch" style="background: {{DIR_A_PRIMARY}};"><span class="hex">{{DIR_A_PRIMARY}}</span></div>
+        <div class="swatch" style="background: {{DIR_A_TEXT}};"><span class="hex">{{DIR_A_TEXT}}</span></div>
+        <div class="swatch" style="background: {{DIR_A_MUTED}};"><span class="hex">{{DIR_A_MUTED}}</span></div>
+        <div class="swatch" style="background: {{DIR_A_ACCENT}};"><span class="hex">{{DIR_A_ACCENT}}</span></div>
+      </div>
+    </div>
+
+    <div class="type-stack">
+      <div class="section-label">Type Stack</div>
+      <div class="type-row">
+        <div class="type-label">Display</div>
+        <div class="type-sample display">Headline voice</div>
+        <div class="type-name">{{DIR_A_DISPLAY_NAME}}</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Body</div>
+        <div class="type-sample body">A working archive of the discipline.</div>
+        <div class="type-name">{{DIR_A_BODY_NAME}}</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Mono</div>
+        <div class="type-sample mono">{{PROJECT_NAME}} · v1 · 2026</div>
+        <div class="type-name">{{DIR_A_MONO_NAME}}</div>
+      </div>
+    </div>
+
+    <div class="rationale">{{DIR_A_RATIONALE}}</div>
+
+    <div class="choose"><span class="key">A</span>commit to this direction</div>
+  </div>
+
+  <!-- ── DIRECTION B ────────────────────────────────────────── -->
+  <div class="dir b">
+    <div class="dir-head">
+      <div>
+        <div class="dir-badge">B · {{DIR_B_REGISTER}}</div>
+        <div class="dir-name">{{DIR_B_NAME}}</div>
+      </div>
+      <div class="dir-register">{{DIR_B_PALETTE_NOTE}}</div>
+    </div>
+
+    <div class="mark-stage">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        {{DIR_B_MARK_INNER}}
+      </svg>
+    </div>
+
+    <div class="wordmark">{{DIR_B_WORDMARK}}</div>
+    <div class="tagline">{{DIR_B_TAGLINE}}</div>
+
+    <div class="palette-section">
+      <div class="section-label">Palette</div>
+      <div class="palette-row">
+        <div class="swatch" style="background: {{DIR_B_BG}};"><span class="hex">{{DIR_B_BG}}</span></div>
+        <div class="swatch" style="background: {{DIR_B_SURFACE}};"><span class="hex">{{DIR_B_SURFACE}}</span></div>
+        <div class="swatch" style="background: {{DIR_B_PRIMARY}};"><span class="hex">{{DIR_B_PRIMARY}}</span></div>
+        <div class="swatch" style="background: {{DIR_B_TEXT}};"><span class="hex">{{DIR_B_TEXT}}</span></div>
+        <div class="swatch" style="background: {{DIR_B_MUTED}};"><span class="hex">{{DIR_B_MUTED}}</span></div>
+        <div class="swatch" style="background: {{DIR_B_ACCENT}};"><span class="hex">{{DIR_B_ACCENT}}</span></div>
+      </div>
+    </div>
+
+    <div class="type-stack">
+      <div class="section-label">Type Stack</div>
+      <div class="type-row">
+        <div class="type-label">Display</div>
+        <div class="type-sample display">Headline voice</div>
+        <div class="type-name">{{DIR_B_DISPLAY_NAME}}</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Body</div>
+        <div class="type-sample body">A working archive of the discipline.</div>
+        <div class="type-name">{{DIR_B_BODY_NAME}}</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Mono</div>
+        <div class="type-sample mono">{{PROJECT_NAME}} · v1 · 2026</div>
+        <div class="type-name">{{DIR_B_MONO_NAME}}</div>
+      </div>
+    </div>
+
+    <div class="rationale">{{DIR_B_RATIONALE}}</div>
+
+    <div class="choose"><span class="key">B</span>commit to this direction</div>
+  </div>
+
+  <!-- ── DIRECTION C ────────────────────────────────────────── -->
+  <div class="dir c">
+    <div class="dir-head">
+      <div>
+        <div class="dir-badge">C · {{DIR_C_REGISTER}}</div>
+        <div class="dir-name">{{DIR_C_NAME}}</div>
+      </div>
+      <div class="dir-register">{{DIR_C_PALETTE_NOTE}}</div>
+    </div>
+
+    <div class="mark-stage">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        {{DIR_C_MARK_INNER}}
+      </svg>
+    </div>
+
+    <div class="wordmark">{{DIR_C_WORDMARK}}</div>
+    <div class="tagline">{{DIR_C_TAGLINE}}</div>
+
+    <div class="palette-section">
+      <div class="section-label">Palette</div>
+      <div class="palette-row">
+        <div class="swatch" style="background: {{DIR_C_BG}};"><span class="hex">{{DIR_C_BG}}</span></div>
+        <div class="swatch" style="background: {{DIR_C_SURFACE}};"><span class="hex">{{DIR_C_SURFACE}}</span></div>
+        <div class="swatch" style="background: {{DIR_C_PRIMARY}};"><span class="hex">{{DIR_C_PRIMARY}}</span></div>
+        <div class="swatch" style="background: {{DIR_C_TEXT}};"><span class="hex">{{DIR_C_TEXT}}</span></div>
+        <div class="swatch" style="background: {{DIR_C_MUTED}};"><span class="hex">{{DIR_C_MUTED}}</span></div>
+        <div class="swatch" style="background: {{DIR_C_ACCENT}};"><span class="hex">{{DIR_C_ACCENT}}</span></div>
+      </div>
+    </div>
+
+    <div class="type-stack">
+      <div class="section-label">Type Stack</div>
+      <div class="type-row">
+        <div class="type-label">Display</div>
+        <div class="type-sample display">Headline voice</div>
+        <div class="type-name">{{DIR_C_DISPLAY_NAME}}</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Body</div>
+        <div class="type-sample body">A working archive of the discipline.</div>
+        <div class="type-name">{{DIR_C_BODY_NAME}}</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">Mono</div>
+        <div class="type-sample mono">{{PROJECT_NAME}} · v1 · 2026</div>
+        <div class="type-name">{{DIR_C_MONO_NAME}}</div>
+      </div>
+    </div>
+
+    <div class="rationale">{{DIR_C_RATIONALE}}</div>
+
+    <div class="choose"><span class="key">C</span>commit to this direction</div>
+  </div>
+
+</div>
+
+<!-- ── How to choose ──────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="label">How to choose</div>
+  <h2>Tell me which direction commits — A, B, or C.</h2>
+  <p>I'll generate the full <code>brand.html</code> from your pick: 8 mark variations, app icon mockups, full lockup set, color tokens, type specimens, and downloadable SVG/PNG assets. Or ask for a fourth direction if none feel right yet.</p>
+</footer>
+
+</body>
+</html>

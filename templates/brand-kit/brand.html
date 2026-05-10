@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{PROJECT_NAME}} · Brand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="{{GOOGLE_FONTS_URL}}" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>{{MARK_INNER_FAVICON}}</svg>">
+<style>
+  :root {
+    --ink:        {{INK}};
+    --ink-2:      {{INK_2}};
+    --ink-3:      {{INK_3}};
+    --line:       {{LINE}};
+    --line-soft:  {{LINE_SOFT}};
+    --paper:      {{PAPER}};
+    --paper-2:    {{PAPER_2}};
+    --primary:    {{PRIMARY}};
+    --primary-2:  {{PRIMARY_2}};
+    --primary-soft: {{PRIMARY_SOFT}};
+    --accent-a:   {{ACCENT_A}};
+    --accent-b:   {{ACCENT_B}};
+    --bone:       {{BONE}};
+    --slate:      {{SLATE}};
+    --slate-soft: {{SLATE_SOFT}};
+
+    --serif: {{FONT_SERIF}};
+    --sans:  {{FONT_SANS}};
+    --mono:  {{FONT_MONO}};
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--ink);
+    color: var(--bone);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection { background: var(--primary); color: var(--ink); }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ── Top utility bar ────────────────────────────────────────── */
+  .util {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--line-soft);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+  .util .left { display: flex; gap: 18px; align-items: center; }
+  .util .crumb { color: var(--slate-soft); }
+  .util .crumb strong { color: var(--bone); font-weight: 600; }
+  .util a.back { color: var(--slate); transition: color .15s; }
+  .util a.back:hover { color: var(--primary); }
+  .util .ver { color: var(--primary); }
+
+  /* ── Hero stage ─────────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    min-height: 92vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 80px 28px 120px;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--primary) 8%, transparent) 0%, transparent 60%),
+      linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 100%);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.25;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+    width: 1px; height: 40px;
+    background: linear-gradient(180deg, transparent, var(--primary));
+  }
+
+  .hero-mark {
+    position: relative;
+    width: 240px; height: 240px;
+    color: var(--primary);
+    filter: drop-shadow(0 10px 60px color-mix(in srgb, var(--primary) 18%, transparent));
+    transition: transform 1.2s cubic-bezier(.2,.8,.2,1);
+  }
+  .hero:hover .hero-mark { transform: rotate(45deg); }
+  .hero-mark svg { width: 100%; height: 100%; display: block; }
+
+  .hero-orbit {
+    position: absolute; inset: -40px;
+    border: 1px dashed color-mix(in srgb, var(--primary) 28%, transparent);
+    border-radius: 50%;
+    animation: orbit 60s linear infinite;
+  }
+  .hero-orbit::before, .hero-orbit::after {
+    content: ''; position: absolute;
+    width: 6px; height: 6px;
+    background: var(--primary);
+    border-radius: 50%;
+  }
+  .hero-orbit::before { top: -3px; left: 50%; transform: translateX(-50%); }
+  .hero-orbit::after  { bottom: -3px; left: 50%; transform: translateX(-50%); opacity: 0.4; }
+  @keyframes orbit { to { transform: rotate(360deg); } }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    margin-top: 56px;
+    text-align: center;
+    color: var(--bone);
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--primary);
+  }
+
+  .hero .meta {
+    display: flex; gap: 24px; align-items: center;
+    margin-top: 28px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--slate);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hero .meta .sep { width: 24px; height: 1px; background: var(--line); }
+  .hero .meta .accent { color: var(--primary); }
+
+  .hero .tagline {
+    margin-top: 36px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--slate);
+    text-align: center;
+    max-width: 560px;
+  }
+
+  /* ── Section frame ──────────────────────────────────────────── */
+  section {
+    padding: 100px 28px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-head {
+    display: flex; align-items: baseline; gap: 24px;
+    margin-bottom: 56px;
+  }
+  .section-head .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--primary);
+    letter-spacing: 1px;
+  }
+  .section-head h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 36px;
+    letter-spacing: -0.01em;
+    color: var(--bone);
+  }
+  .section-head .lede {
+    margin-left: auto;
+    max-width: 480px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--slate);
+  }
+
+  /* ── Mark variations grid ───────────────────────────────────── */
+  .mark-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .mark-cell {
+    aspect-ratio: 1;
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    transition: border-color .2s;
+  }
+  .mark-cell:hover { border-color: var(--primary); }
+  .mark-cell svg { width: 50%; height: 50%; }
+  .mark-cell .label {
+    position: absolute; bottom: 14px; left: 14px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--slate-soft);
+  }
+
+  .mark-cell.dark    { background: var(--ink-2); color: var(--primary); }
+  .mark-cell.darker  { background: var(--ink); color: var(--bone); }
+  .mark-cell.brand   { background: var(--primary); color: var(--ink); }
+  .mark-cell.paper   { background: var(--paper); color: var(--ink); }
+  .mark-cell.bone    { background: var(--bone); color: var(--ink); }
+  .mark-cell.accent-a{ background: var(--accent-a); color: var(--bone); }
+  .mark-cell.accent-b{ background: var(--accent-b); color: var(--bone); }
+  .mark-cell.outline { background: transparent; color: var(--bone); }
+
+  /* ── Concept showcase ───────────────────────────────────────── */
+  .concepts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line-soft);
+    border: 1px solid var(--line-soft);
+  }
+  .concept {
+    background: var(--ink-2);
+    padding: 48px 32px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .concept .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .concept .glyph {
+    width: 140px; height: 140px;
+    color: var(--primary);
+    margin-bottom: 32px;
+  }
+  .concept h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--bone);
+    margin-bottom: 8px;
+  }
+  .concept p {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--slate);
+    text-align: center;
+    line-height: 1.55;
+    max-width: 280px;
+  }
+
+  /* ── Sizes ──────────────────────────────────────────────────── */
+  .sizes {
+    background: var(--ink-2);
+    border: 1px solid var(--line-soft);
+    padding: 64px 32px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .size-cell {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    color: var(--bone);
+  }
+  .size-cell .swatch {
+    color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .size-cell .px {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.6px;
+    color: var(--slate);
+  }
+  .size-cell .use {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.6px;
+    color: var(--slate-soft);
+    text-transform: uppercase;
+  }
+
+  /* ── Mockups (app icons in context) ─────────────────────────── */
+  .mockups {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .mockup {
+    background: var(--ink-2);
+    border: 1px solid var(--line-soft);
+    padding: 36px 24px;
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+  .mockup .frame { display: flex; align-items: center; justify-content: center; }
+  .mockup .name {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .icon-ios {
+    width: 128px; height: 128px;
+    border-radius: 28px;
+    background: linear-gradient(160deg, var(--ink-3) 0%, var(--ink) 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.06) inset,
+      0 8px 28px rgba(0,0,0,0.5);
+    color: var(--primary);
+    position: relative;
+    overflow: hidden;
+  }
+  .icon-ios::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent);
+  }
+  .icon-ios svg { width: 70%; height: 70%; position: relative; z-index: 1; }
+
+  .icon-mac {
+    width: 128px; height: 128px;
+    border-radius: 24px;
+    background:
+      radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--primary) 22%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--ink-3), var(--ink));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow:
+      0 1px 0 color-mix(in srgb, var(--primary) 25%, transparent) inset,
+      0 -1px 0 rgba(0,0,0,0.6) inset,
+      0 12px 32px rgba(0,0,0,0.6);
+    color: var(--primary);
+  }
+  .icon-mac svg { width: 65%; height: 65%; }
+
+  .icon-android {
+    width: 128px; height: 128px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+  }
+  .icon-android svg { width: 56%; height: 56%; }
+
+  .icon-tab {
+    width: 240px;
+    background: var(--ink-3);
+    border-radius: 8px 8px 0 0;
+    border-top: 2px solid var(--primary);
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 10px;
+    color: var(--bone);
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+  .icon-tab svg { width: 14px; height: 14px; color: var(--primary); flex-shrink: 0; }
+  .icon-tab .url {
+    flex: 1;
+    color: var(--slate);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .icon-tab .x { color: var(--slate-soft); }
+
+  /* ── Wordmark lockups ───────────────────────────────────────── */
+  .lockups {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .lockup {
+    background: var(--ink-2);
+    border: 1px solid var(--line-soft);
+    padding: 56px 32px;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 200px;
+    position: relative;
+  }
+  .lockup .cap {
+    position: absolute; top: 14px; left: 14px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.8px;
+    color: var(--slate-soft);
+    text-transform: uppercase;
+  }
+  .lockup.light { background: var(--paper); }
+  .lockup.light .wm { color: var(--ink); }
+
+  .wm-stack { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .wm-stack svg { width: 56px; height: 56px; color: var(--primary); }
+  .wm-stack .text {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 22px;
+    text-align: center;
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+  }
+  .wm-stack .text .small {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    color: var(--slate);
+    margin-top: 6px;
+  }
+
+  .wm-horiz { display: flex; align-items: center; gap: 18px; }
+  .wm-horiz svg { width: 48px; height: 48px; color: var(--primary); flex-shrink: 0; }
+  .wm-horiz .text {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+  }
+  .wm-horiz .text .small {
+    display: block;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    color: var(--slate);
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  .wm-mono {
+    font-family: var(--serif);
+    font-weight: 800;
+    font-size: 80px;
+    color: var(--primary);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .wm-mono .slash { color: var(--slate-soft); font-weight: 400; }
+
+  .wm-text {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 36px;
+    text-align: center;
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    color: var(--bone);
+  }
+  .wm-text em { font-style: italic; font-weight: 400; color: var(--primary); }
+  .wm-text .rule {
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: var(--primary);
+    margin: 18px auto;
+  }
+  .wm-text .meta {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.4em;
+    color: var(--slate);
+  }
+
+  /* ── Color system ───────────────────────────────────────────── */
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+    background: var(--line-soft);
+    border: 1px solid var(--line-soft);
+  }
+  .swatch-cell {
+    background: var(--ink-2);
+    aspect-ratio: 1;
+    padding: 18px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .swatch-cell .chip {
+    width: 100%;
+    flex: 1;
+    border-radius: 2px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .swatch-cell .name {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--bone);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .swatch-cell .hex {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--slate);
+    margin-top: 2px;
+  }
+
+  /* ── Typography spec ────────────────────────────────────────── */
+  .type-spec {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .type-card {
+    background: var(--ink-2);
+    border: 1px solid var(--line-soft);
+    padding: 36px;
+  }
+  .type-card .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .type-card .specimen {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 56px;
+    color: var(--bone);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    margin-bottom: 18px;
+  }
+  .type-card .specimen.sans {
+    font-family: var(--sans);
+    font-weight: 700;
+  }
+  .type-card .specimen.mono {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 40px;
+    letter-spacing: -0.01em;
+  }
+  .type-card .info {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--slate);
+    border-top: 1px solid var(--line-soft);
+    padding-top: 14px;
+  }
+  .type-card .info span { color: var(--bone); }
+
+  /* ── Downloads ──────────────────────────────────────────────── */
+  .downloads {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .dl-card {
+    background: var(--ink-2);
+    border: 1px solid var(--line-soft);
+    padding: 28px;
+    display: flex; flex-direction: column; gap: 18px;
+    transition: border-color .15s;
+  }
+  .dl-card:hover { border-color: var(--primary); }
+  .dl-card .top { display: flex; align-items: center; gap: 14px; }
+  .dl-card .ico {
+    width: 40px; height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--primary);
+  }
+  .dl-card .ico svg { width: 22px; height: 22px; }
+  .dl-card .ttl {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--bone);
+  }
+  .dl-card .desc {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--slate);
+  }
+  .dl-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .dl-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--ink);
+    color: var(--bone);
+    border: 1px solid var(--line);
+    padding: 8px 14px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all .15s;
+  }
+  .dl-btn:hover {
+    background: var(--primary);
+    color: var(--ink);
+    border-color: var(--primary);
+  }
+
+  /* ── Footer ─────────────────────────────────────────────────── */
+  footer {
+    padding: 56px 28px;
+    border-top: 1px solid var(--line-soft);
+    background: var(--ink-2);
+    color: var(--slate);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  footer .top {
+    display: flex; justify-content: center; align-items: center; gap: 16px;
+    margin-bottom: 14px;
+  }
+  footer .top svg { width: 22px; height: 22px; color: var(--primary); }
+  footer .meta { color: var(--slate-soft); }
+
+  /* ── Responsive ─────────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .mark-grid { grid-template-columns: repeat(2, 1fr); }
+    .concepts { grid-template-columns: 1fr; }
+    .mockups { grid-template-columns: repeat(2, 1fr); }
+    .lockups { grid-template-columns: 1fr; }
+    .palette { grid-template-columns: repeat(3, 1fr); }
+    .type-spec { grid-template-columns: 1fr; }
+    .downloads { grid-template-columns: 1fr; }
+    .section-head { flex-direction: column; gap: 14px; }
+    .section-head .lede { margin-left: 0; }
+    .hero h1 { font-size: 48px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Top utility bar ─────────────────────────────────────────── -->
+<div class="util">
+  <div class="left">
+    <span class="crumb"><strong>{{PROJECT_NAME}}</strong> &nbsp;/&nbsp; Brand</span>
+  </div>
+  <div class="right">
+    <a class="back" href="{{BACK_HREF}}">{{BACK_LABEL}}</a>
+    &nbsp;&nbsp;<span class="ver">{{VERSION_LINE}}</span>
+  </div>
+</div>
+
+<!-- ── HERO ────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-mark" id="hero-mark">
+    <div class="hero-orbit"></div>
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      {{MARK_INNER}}
+    </svg>
+  </div>
+
+  <h1>{{PROJECT_NAME_HERO}}</h1>
+
+  <div class="meta">
+    <span>{{SUBTITLE}}</span>
+    <span class="sep"></span>
+    <span class="accent">{{ERA_LINE}}</span>
+    <span class="sep"></span>
+    <span>{{META_EXTRA}}</span>
+  </div>
+
+  <p class="tagline">{{TAGLINE}}</p>
+</section>
+
+<!-- ── 01 · The Mark ───────────────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="num">01</span>
+      <h2>The Mark</h2>
+      <p class="lede">{{LEDE_MARK}}</p>
+    </div>
+
+    <div class="mark-grid">
+      <div class="mark-cell darker">
+        <svg viewBox="0 0 64 64">{{MARK_INNER}}</svg>
+        <span class="label">primary · on ink</span>
+      </div>
+      <div class="mark-cell brand" style="color: var(--ink);">
+        <svg viewBox="0 0 64 64">{{MARK_INNER}}</svg>
+        <span class="label" style="color: color-mix(in srgb, var(--ink) 65%, transparent);">inverse · ink on primary</span>
+      </div>
+      <div class="mark-cell paper" style="color: var(--ink);">
+        <svg viewBox="0 0 64 64">{{MARK_INNER}}</svg>
+        <span class="label" style="color: color-mix(in srgb, var(--ink) 55%, transparent);">paper · ink on parchment</span>
+      </div>
+      <div class="mark-cell outline">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="miter">
+          {{MARK_INNER_OUTLINE}}
+        </svg>
+        <span class="label">outline · stroke only</span>
+      </div>
+      <div class="mark-cell accent-b">
+        <svg viewBox="0 0 64 64">{{MARK_INNER}}</svg>
+        <span class="label" style="color: color-mix(in srgb, var(--bone) 65%, transparent);">accent · hot ground</span>
+      </div>
+      <div class="mark-cell accent-a">
+        <svg viewBox="0 0 64 64">{{MARK_INNER}}</svg>
+        <span class="label" style="color: color-mix(in srgb, var(--bone) 65%, transparent);">accent · cool ground</span>
+      </div>
+      <div class="mark-cell bone" style="color: var(--ink);">
+        <svg viewBox="0 0 64 64">{{MARK_INNER}}</svg>
+        <span class="label" style="color: color-mix(in srgb, var(--ink) 55%, transparent);">bone · ivory ground</span>
+      </div>
+      <div class="mark-cell dark" style="color: var(--bone);">
+        <svg viewBox="0 0 64 64">{{MARK_INNER}}</svg>
+        <span class="label">monochrome · bone on ink</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 02 · Concepts ───────────────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="num">02</span>
+      <h2>Three Concepts</h2>
+      <p class="lede">{{LEDE_CONCEPTS}}</p>
+    </div>
+
+    <div class="concepts">
+      <div class="concept">
+        <span class="badge">A · primary</span>
+        <div class="glyph">
+          <svg viewBox="0 0 64 64">{{MARK_INNER}}</svg>
+        </div>
+        <h3>{{MARK_NAME}}</h3>
+        <p>{{MARK_STORY}}</p>
+      </div>
+
+      <div class="concept">
+        <span class="badge">B · supporting</span>
+        <div class="glyph">
+          <svg viewBox="0 0 64 64">{{MARK_2_INNER}}</svg>
+        </div>
+        <h3>{{MARK_2_NAME}}</h3>
+        <p>{{MARK_2_DESC}}</p>
+      </div>
+
+      <div class="concept">
+        <span class="badge">C · supporting</span>
+        <div class="glyph">
+          <svg viewBox="0 0 64 64">{{MARK_3_INNER}}</svg>
+        </div>
+        <h3>{{MARK_3_NAME}}</h3>
+        <p>{{MARK_3_DESC}}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 03 · Sizes ──────────────────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="num">03</span>
+      <h2>Size System</h2>
+      <p class="lede">{{LEDE_SIZES}}</p>
+    </div>
+
+    <div class="sizes" id="sizes-row"></div>
+  </div>
+</section>
+
+<!-- ── 04 · Mockups in context ─────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="num">04</span>
+      <h2>In Context</h2>
+      <p class="lede">{{LEDE_MOCKUPS}}</p>
+    </div>
+
+    <div class="mockups">
+      <div class="mockup">
+        <div class="frame">
+          <div class="icon-ios"><svg viewBox="0 0 64 64">{{MARK_INNER}}</svg></div>
+        </div>
+        <span class="name">iOS · 1024px squircle</span>
+      </div>
+
+      <div class="mockup">
+        <div class="frame">
+          <div class="icon-mac"><svg viewBox="0 0 64 64">{{MARK_INNER}}</svg></div>
+        </div>
+        <span class="name">macOS · dock icon</span>
+      </div>
+
+      <div class="mockup">
+        <div class="frame">
+          <div class="icon-android"><svg viewBox="0 0 64 64">{{MARK_INNER}}</svg></div>
+        </div>
+        <span class="name">Android · adaptive</span>
+      </div>
+
+      <div class="mockup">
+        <div class="frame">
+          <div class="icon-tab">
+            <svg viewBox="0 0 64 64">{{MARK_INNER}}</svg>
+            <span class="url">{{TAB_URL}}</span>
+            <span class="x">×</span>
+          </div>
+        </div>
+        <span class="name">browser · favicon</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 05 · Wordmark lockups ───────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="num">05</span>
+      <h2>Wordmark Lockups</h2>
+      <p class="lede">{{LEDE_LOCKUPS}}</p>
+    </div>
+
+    <div class="lockups">
+      <div class="lockup">
+        <span class="cap">primary · stacked</span>
+        <div class="wm-stack wm">
+          <svg viewBox="0 0 64 64">{{MARK_INNER}}</svg>
+          <div class="text">
+            {{WORDMARK_STACKED}}
+            <span class="small">{{WORDMARK_STACKED_META}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lockup">
+        <span class="cap">horizontal</span>
+        <div class="wm-horiz wm">
+          <svg viewBox="0 0 64 64">{{MARK_INNER}}</svg>
+          <div class="text">
+            {{WORDMARK_HORIZ}}
+            <span class="small">{{WORDMARK_HORIZ_META}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lockup">
+        <span class="cap">monogram</span>
+        <div class="wm-mono wm">{{MONOGRAM_LEFT}}<span class="slash">/</span>{{MONOGRAM_RIGHT}}</div>
+      </div>
+
+      <div class="lockup light">
+        <span class="cap" style="color: color-mix(in srgb, var(--ink) 45%, transparent);">paper · editorial</span>
+        <div class="wm wm-text" style="color: var(--ink);">
+          {{WORDMARK_EDITORIAL}}
+          <span class="rule" style="background: var(--primary-2);"></span>
+          <span class="meta" style="color: var(--slate-soft);">{{EDITORIAL_META}}</span>
+        </div>
+      </div>
+
+      <div class="lockup" style="grid-column: 1 / -1;">
+        <span class="cap">full lockup · headline</span>
+        <div class="wm-text">
+          {{WORDMARK_HEADLINE}}
+          <span class="rule"></span>
+          <span class="meta">{{HEADLINE_META}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 06 · Color ──────────────────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="num">06</span>
+      <h2>Color System</h2>
+      <p class="lede">{{LEDE_COLOR}}</p>
+    </div>
+
+    <div class="palette">
+      <div class="swatch-cell">
+        <div class="chip" style="background: var(--ink);"></div>
+        <div><div class="name">{{COLOR_NAME_INK}}</div><div class="hex">{{INK}}</div></div>
+      </div>
+      <div class="swatch-cell">
+        <div class="chip" style="background: var(--primary);"></div>
+        <div><div class="name">{{COLOR_NAME_PRIMARY}}</div><div class="hex">{{PRIMARY}}</div></div>
+      </div>
+      <div class="swatch-cell">
+        <div class="chip" style="background: var(--paper);"></div>
+        <div><div class="name">{{COLOR_NAME_PAPER}}</div><div class="hex">{{PAPER}}</div></div>
+      </div>
+      <div class="swatch-cell">
+        <div class="chip" style="background: var(--bone);"></div>
+        <div><div class="name">{{COLOR_NAME_BONE}}</div><div class="hex">{{BONE}}</div></div>
+      </div>
+      <div class="swatch-cell">
+        <div class="chip" style="background: var(--accent-a);"></div>
+        <div><div class="name">{{COLOR_NAME_ACCENT_A}}</div><div class="hex">{{ACCENT_A}}</div></div>
+      </div>
+      <div class="swatch-cell">
+        <div class="chip" style="background: var(--accent-b);"></div>
+        <div><div class="name">{{COLOR_NAME_ACCENT_B}}</div><div class="hex">{{ACCENT_B}}</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 07 · Type ───────────────────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="num">07</span>
+      <h2>Typography</h2>
+      <p class="lede">{{LEDE_TYPE}}</p>
+    </div>
+
+    <div class="type-spec">
+      <div class="type-card">
+        <div class="label">Display · headlines &amp; lockups</div>
+        <div class="specimen">{{TYPE_DISPLAY_SAMPLE}}</div>
+        <div class="info">
+          <span>{{FONT_DISPLAY_NAME}}</span> &nbsp;·&nbsp; {{FONT_DISPLAY_WEIGHTS}} &nbsp;·&nbsp; <span>{{FONT_DISPLAY_NOTE}}</span>
+        </div>
+      </div>
+
+      <div class="type-card">
+        <div class="label">Interface · ui &amp; navigation</div>
+        <div class="specimen sans">{{TYPE_SANS_SAMPLE}}</div>
+        <div class="info">
+          <span>{{FONT_SANS_NAME}}</span> &nbsp;·&nbsp; {{FONT_SANS_WEIGHTS}} &nbsp;·&nbsp; <span>{{FONT_SANS_NOTE}}</span>
+        </div>
+      </div>
+
+      <div class="type-card" style="grid-column: 1 / -1;">
+        <div class="label">Mono · labels, tabular data, system</div>
+        <div class="specimen mono">{{TYPE_MONO_SAMPLE}}</div>
+        <div class="info">
+          <span>{{FONT_MONO_NAME}}</span> &nbsp;·&nbsp; {{FONT_MONO_WEIGHTS}} &nbsp;·&nbsp; <span>fixed-width</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 08 · Downloads ──────────────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <span class="num">08</span>
+      <h2>Downloads</h2>
+      <p class="lede">{{LEDE_DOWNLOADS}}</p>
+    </div>
+
+    <div class="downloads">
+      <div class="dl-card">
+        <div class="top">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 3v5h5M5 3h9l5 5v13H5z"/></svg>
+          </div>
+          <div>
+            <div class="ttl">Vector · SVG</div>
+            <div class="desc">Lossless. Use everywhere.</div>
+          </div>
+        </div>
+        <div class="dl-row">
+          <button class="dl-btn" data-svg="primary">Primary</button>
+          <button class="dl-btn" data-svg="mark2">{{MARK_2_NAME_SHORT}}</button>
+          <button class="dl-btn" data-svg="mark3">{{MARK_3_NAME_SHORT}}</button>
+        </div>
+      </div>
+
+      <div class="dl-card">
+        <div class="top">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>
+          </div>
+          <div>
+            <div class="ttl">Raster · PNG</div>
+            <div class="desc">Transparent ground.</div>
+          </div>
+        </div>
+        <div class="dl-row">
+          <button class="dl-btn" data-png="64">64</button>
+          <button class="dl-btn" data-png="128">128</button>
+          <button class="dl-btn" data-png="256">256</button>
+          <button class="dl-btn" data-png="512">512</button>
+          <button class="dl-btn" data-png="1024">1024</button>
+        </div>
+      </div>
+
+      <div class="dl-card">
+        <div class="top">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+          </div>
+          <div>
+            <div class="ttl">Browser · favicon</div>
+            <div class="desc">SVG favicon, ready to drop into <code style="font-family: var(--mono); font-size: 11px; color: var(--primary);">&lt;link rel="icon"&gt;</code>.</div>
+          </div>
+        </div>
+        <div class="dl-row">
+          <button class="dl-btn" data-fav="primary">Primary</button>
+          <button class="dl-btn" data-fav="bone">Bone</button>
+          <button class="dl-btn" data-fav="ink">Ink</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="top">
+    <svg viewBox="0 0 64 64">{{MARK_INNER}}</svg>
+    <span>{{PROJECT_NAME}}</span>
+  </div>
+  <div class="meta">{{FOOTER_META}}</div>
+</footer>
+
+<script>
+/* ── Render the size system row ────────────────────────────────── */
+(function renderSizes() {
+  const row = document.getElementById('sizes-row');
+  const sizes = [
+    { px: 16,  use: 'favicon' },
+    { px: 24,  use: 'inline' },
+    { px: 32,  use: 'ui' },
+    { px: 48,  use: 'tab' },
+    { px: 64,  use: 'tile' },
+    { px: 96,  use: 'card' },
+    { px: 128, use: 'app' },
+    { px: 256, use: 'splash' },
+  ];
+  const markSvg = `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">{{MARK_INNER}}</svg>`;
+  row.innerHTML = sizes.map(s => `
+    <div class="size-cell">
+      <div class="swatch" style="width:${s.px}px; height:${s.px}px;">${markSvg}</div>
+      <div class="px">${s.px} × ${s.px}</div>
+      <div class="use">${s.use}</div>
+    </div>
+  `).join('');
+})();
+
+/* ── SVG asset library ─────────────────────────────────────────── */
+const PRIMARY_HEX = '{{PRIMARY}}';
+const BONE_HEX    = '{{BONE}}';
+const INK_HEX     = '{{INK}}';
+
+const svgLib = {
+  primary: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" color="${PRIMARY_HEX}" fill="${PRIMARY_HEX}">{{MARK_INNER}}</svg>`,
+  mark2:   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" color="${PRIMARY_HEX}" fill="${PRIMARY_HEX}">{{MARK_2_INNER}}</svg>`,
+  mark3:   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" color="${PRIMARY_HEX}" fill="${PRIMARY_HEX}">{{MARK_3_INNER}}</svg>`,
+};
+
+const favLib = {
+  primary: PRIMARY_HEX,
+  bone:    BONE_HEX,
+  ink:     INK_HEX,
+};
+
+/* ── Download helpers ──────────────────────────────────────────── */
+function triggerDownload(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function downloadSvg(name) {
+  const svg = svgLib[name];
+  if (!svg) return;
+  const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+  triggerDownload(blob, `{{SLUG}}-${name}.svg`);
+}
+
+function downloadPng(size) {
+  const svg = svgLib.primary;
+  const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, 0, 0, size, size);
+    canvas.toBlob(b => {
+      triggerDownload(b, `{{SLUG}}-mark-${size}.png`);
+      URL.revokeObjectURL(url);
+    }, 'image/png');
+  };
+  img.src = url;
+}
+
+function downloadFavicon(variant) {
+  const color = favLib[variant];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" color="${color}" fill="${color}">{{MARK_INNER}}</svg>`;
+  const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+  triggerDownload(blob, `favicon-${variant}.svg`);
+}
+
+document.querySelectorAll('[data-svg]').forEach(b => b.addEventListener('click', () => downloadSvg(b.dataset.svg)));
+document.querySelectorAll('[data-png]').forEach(b => b.addEventListener('click', () => downloadPng(parseInt(b.dataset.png, 10))));
+document.querySelectorAll('[data-fav]').forEach(b => b.addEventListener('click', () => downloadFavicon(b.dataset.fav)));
+</script>
+
+</body>
+</html>
